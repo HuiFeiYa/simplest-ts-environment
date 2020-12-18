@@ -1,5 +1,14 @@
 {
     "compilerOptions": {
+        // 对于隐式还有 any 类型的参数进行警告。strict 设置为true时该值默认为 true
+        "noImplicitAny": true,
+        "target": "esnext",
+        "module": "esnext",
+        "strict": true,
         "sourceMap": true
-    }
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": ["node_modules"]
 }
