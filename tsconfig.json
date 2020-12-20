@@ -5,7 +5,15 @@
         "target": "esnext",
         "module": "esnext",
         "strict": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "importHelpers": true,
+        // 忽略所有的声明文件（ *.d.ts）的类型检查。
+        "skipLibCheck": true,
+        // 模块解析策略,默认值为Classic(这种策略在以前是TypeScript默认的解析策略。 现在，它存在的理由主要是为了向后兼容。)
+        "moduleResolution": "node",
+    },
+    "path":{
+        "@/*": ["src/*"],
     },
     "include": [
         "src/**/*.ts"

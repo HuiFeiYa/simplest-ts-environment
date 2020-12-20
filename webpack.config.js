@@ -2,6 +2,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 module.exports = {
     mode:'development',
     devtool: 'inline-source-map', // 正式环境使用 ''
@@ -15,6 +16,10 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'ts-loader'
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
             }
         ]
     },
@@ -26,6 +31,7 @@ module.exports = {
         contentBase:path.resolve(__dirname, 'dist'),
     },
     plugins: [
+        new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
           title: 'simplest ts environment',
           template:'index.html'
