@@ -14,6 +14,7 @@
     },
     "path":{
         "@/*": ["src/*"],
+        "PUBLIC/*":["public/*"]
     },
     "include": [
         "src/**/*.ts"

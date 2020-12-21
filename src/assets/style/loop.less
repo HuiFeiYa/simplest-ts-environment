@@ -1,0 +1,64 @@
+@count: 0;
+@MAX: 150;
+// 定义css循环函数体
+.loop(@count) when (@count<=@MAX) {
+	.fs@{count} {
+		font-size: @count * 1px !important;
+	}
+	.mb@{count} {
+		margin-bottom: @count * 1px !important;
+	}
+	.mt@{count} {
+		margin-top: @count * 1px !important;
+	}
+	.ml@{count} {
+		margin-left: @count * 1px !important;
+	}
+	.mr@{count} {
+		margin-right: @count * 1px !important;
+	}
+	.m@{count} {
+		margin: @count * 1px !important;
+	}
+	.pb@{count} {
+		padding-bottom: @count * 1px !important;
+	}
+	.pt@{count} {
+		padding-top: @count * 1px !important;
+	}
+	.pl@{count} {
+		padding-left: @count * 1px !important;
+	}
+	.pr@{count} {
+		padding-right: @count * 1px !important;
+	}
+	.p@{count} {
+		padding: @count * 1px !important;
+	}
+	.h@{count} {
+		height: @count * 1px !important;
+	}
+	.hl@{count} {
+		height: @count * 1px !important;
+		line-height: @count * 1px !important;
+	}
+	.l@{count} {
+		line-height: @count * 1px !important;
+	}
+	.w@{count} {
+		width: @count * 1px !important;
+	}
+	.wp@{count} {
+		width: @count * 1% !important;
+	}
+	.ti@{count} {
+		text-indent: @count * 1% !important;
+	}
+	.lh@{count} {
+		line-height: @count * 1px !important;
+	}
+	// 递归调用
+	.loop(@count+1);
+}
+// 执行函数
+.loop(@count);
