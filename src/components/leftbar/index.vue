@@ -24,6 +24,7 @@
           dot-size="25"
           show-swatches
           swatches-max-height="200"
+          @input="onColorPickerInput"
         ></v-color-picker>
       </div>
     </div>
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+  // import { ctx,canvas,virturalCanvas,virtualCtx } from '../../canvas'
+
   export default {
     name: '',
 
@@ -40,15 +43,39 @@
         width:'',
         height:'',
         isOpen:false,
-        color:''
+        color:'',
+        isLoad:false
       }
+    },
+    mounted() {
+      this.isLoad = true
     },
     computed:{
       lock() {
         return this.isOpen ? 'kaisuo' : 'suo'
+      },
+      instance() {
+        return this.$store.state.canvasInstance;
+      },
+      updateCanvas() {
+        return this.$store.state.canvasInstance.updateCanvas;
+      },
+      cloneCanvas() {
+        return this.$store.state.canvasInstance.cloneCanvas;
+      },
+      cloneCtx() {
+        return this.$store.state.canvasInstance.cloneCtx
       }
     },
-    methods: {}
+    methods: {
+      onColorPickerInput(obj) {
+        if(!this.isLoad)return 
+        const { cloneCanvas,cloneCtx,updateCanvas } = this
+        cloneCtx.fillStyle = obj.hex
+        cloneCtx.fillRect(0,0,cloneCanvas.width,cloneCanvas.height)
+        updateCanvas()
+      }
+    }
   }
 </script>
 
