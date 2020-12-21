@@ -1,5 +1,5 @@
 <template>
-  <svg :class="svgClass" class="icon" aria-hidden="true" v-on="$listeners">
+  <svg :class="svgClass" class="icon" aria-hidden="true" @click="onIconClick">
     <use :href="iconName" />
   </svg>
 </template>
@@ -21,6 +21,11 @@ export default {
     },
     svgClass() {
       return this.className ? 'svg-icon' : ('svg-icon' + this.className)
+    }
+  },
+  methods:{
+    onIconClick() {
+      this.$emit('icon-click',this.iconClass)
     }
   }
 }
