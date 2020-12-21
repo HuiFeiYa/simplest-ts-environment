@@ -20,6 +20,14 @@ module.exports = {
             {
                 test: /\.vue$/,
                 loader: 'vue-loader'
+            },
+            {
+                test: /\.(le|c)ss$/,
+                use:[
+                    'style-loader',
+                    'css-loader',
+                    'less-loader'
+                ]
             }
         ]
     },
@@ -27,16 +35,17 @@ module.exports = {
         extensions: [ '.ts', '.tsx', '.js' ]
     },
     devServer:{
-        // 设计静态文件代理文件夹，设置后可以通过 localhost:8080/index.js 可以访问
-        contentBase:path.resolve(__dirname, 'dist'),
+        // 设计开发环境静态文件代理文件夹，设置后可以通过 localhost:8080/index.js 可以访问
+        contentBase:path.resolve(__dirname, 'public'),
     },
     plugins: [
-        new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
           title: 'simplest ts environment',
           template:'index.html'
         }),
         // 设置插件后可以热更新文件
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new VueLoaderPlugin(),
+
     ],
 };
