@@ -24,7 +24,11 @@ export default {
   mounted() {
     // 使用vue模版中的dom需要等dom加载完后执行 mian.ts 中的代码
     // 如果使用 index.html 模版中的dom，可以放到 script 中的顶端位置
-    // import('./main')
+    import('./main').then(async res=>{
+      const ctx = await res.default
+      // 存储 canvas 上下文
+      this.$store.commit('canvasContext',ctx)
+    })
   },
   methods:{
     onIconClick(type) {

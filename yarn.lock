@@ -4994,6 +4994,11 @@ vuetify@^2.3.21:
   resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.3.21.tgz#b3779a13aa9650b4aff885ef8875e5c2d204d160"
   integrity sha1-s3eaE6qWULSv+IXviHXlwtIE0WA=
 
+vuex@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.6.0.tgz?cache=0&sync_timestamp=1606321032865&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.6.0.tgz#95efa56a58f7607c135b053350833a09e01aa813"
+  integrity sha1-le+lalj3YHwTWwUzUIM6CeAaqBM=
+
 watchpack@^1.5.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.6.0.tgz#4bc12c2ebe8aa277a71f1d3f14d685c7b446cd00"
