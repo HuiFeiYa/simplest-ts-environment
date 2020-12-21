@@ -3,8 +3,7 @@
   "main": "index.js",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack-dev-server --config webpack.config.js"
+    "dev":"tsc"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^1.1.0",
