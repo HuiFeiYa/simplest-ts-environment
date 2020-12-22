@@ -1,7 +1,6 @@
 <template>
   <div class="hp100">
-    <!-- <canvas id="canvas" width="600" height="500"></canvas> -->
-    <toolbar @icon-click="onIconClick"></toolbar>
+    <toolbar></toolbar>
     <div class="hp100 main">
       <leftbar></leftbar>
       <draw></draw>
@@ -22,9 +21,6 @@ export default {
     draw
   },
   methods:{
-    onIconClick(type) {
-      console.log(type)
-    }
   }
 }
 </script>

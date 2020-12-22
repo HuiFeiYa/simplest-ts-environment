@@ -1,8 +1,11 @@
 import store from '../store/index'
-import { mousedown,mouseup,mousemove } from './event'
+import { mousedown, mouseup, mousemove } from './event';
 export class VirtualCanvas {
   private canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
+  private imageData!:ImageData
+  private originData!:ImageData
+  private color = '#fff'
   public cloneCanvas!:HTMLCanvasElement;
   public cloneCtx!:CanvasRenderingContext2D
   // 当前 canvas 相对于窗口左上角的位置
@@ -15,6 +18,11 @@ export class VirtualCanvas {
     x:0,
     y:0
   }
+  // mousedown
+  public downPos = {
+    x:0,
+    y:0
+  }
   public isStart = false
   constructor(canvas:HTMLCanvasElement) {
     this.canvas = canvas;
@@ -22,9 +30,9 @@ export class VirtualCanvas {
     this.cloneCanvas = document.createElement('canvas');
     this.cloneCanvas.width = canvas.width
     this.cloneCanvas.height = canvas.height
+    this.cloneCanvas.style.background = '#fff'
     this.cloneCtx = this.cloneCanvas.getContext('2d') as CanvasRenderingContext2D
     this.init()
-    console.log(canvas.width,canvas.height)
   }
   get width() {
     return this.cloneCanvas.width
@@ -43,6 +51,9 @@ export class VirtualCanvas {
     const { top,left } = this.canvas.getBoundingClientRect()
     // 更新画板的位置
     this.boundPos = { top,left }
+    // 默认为铅笔状态
+    store.commit('setOperate','qianbi')
+    this.saveSnapshot()
   }
   mousedown() {
     this.canvas.addEventListener('mousedown',mousedown.bind(this))
@@ -53,13 +64,27 @@ export class VirtualCanvas {
   mouseup() {
     this.canvas.addEventListener('mouseup',mouseup.bind(this))
   }
-  updateCtxPos(e:MouseEvent) {
+  saveSnapshot() {
+    this.imageData  = this.cloneCtx.getImageData(0,0,this.width,this.height)
+  }
+  applySnapshot() {
+    this.cloneCtx.putImageData(this.imageData,0,0)
+  }
+  pos(e:MouseEvent) {
     const { clientX,clientY } = e
     const { top,left } = this.boundPos
-    this.ctxPos = {
+    return {
       x:clientX - left,
       y:clientY - top
     }
+  }
+  // 更新 mousemove 的鼠标位置
+  updateCtxPos(e:MouseEvent) {
+    this.ctxPos = this.pos(e)
+  }
+  // 更新 mousedown 时候的位置
+  updateMousedownPos(e:MouseEvent) {
+    this.downPos = this.pos(e)
   }
   updateBg(color:string) {
     // 将之前的 ctx 状态存储到栈中
@@ -72,6 +97,11 @@ export class VirtualCanvas {
     this.ctx.fillStyle = color
     this.ctx.fillRect(0,0,this.width,this.height)
     this.ctx.restore()
+    this.color = color
+  }
+  // mousemove 重复使用 ctx.drawImage 会导致渲染错误 --todo
+  draw() {
+    this.updateBg(this.color)
   }
   updateCanvas() {
     this.ctx.drawImage(this.cloneCanvas,0,0,this.width,this.height)

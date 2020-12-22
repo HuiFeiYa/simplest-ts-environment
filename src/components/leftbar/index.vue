@@ -2,31 +2,12 @@
   <div class="leftbar bg-theme hp100">
     <div class="content">
       <div class="flex align-center">
-        <v-text-field
-          v-model="width"
-          class="w70"
-          label="Regular"
-          single-line
-          placeholder="宽"
-        ></v-text-field>
+        <el-input v-model="width" placeholder="宽"></el-input>
         <svg-icon style="font-size:20px" :icon-class="lock"></svg-icon>
-        <v-text-field
-          v-model="height"
-          class="w70"
-          label="Regular"
-          single-line
-          placeholder="高"
-        ></v-text-field>
+        <el-input v-model="height" placeholder="高"></el-input>
       </div>
       <h4>背景颜色选择</h4>
-      <div data-app>
-        <v-color-picker
-          dot-size="25"
-          show-swatches
-          swatches-max-height="200"
-          @input="onColorPickerInput"
-        ></v-color-picker>
-      </div>
+      <el-color-picker @change="onColorPickerInput"></el-color-picker>
     </div>
   </div>
 </template>
@@ -51,10 +32,10 @@
       }
     },
     methods: {
-      onColorPickerInput(obj) {
+      onColorPickerInput(color) {
         if(this.$instance) {
           const {updateBg} = this.$instance
-          updateBg(obj.hex)
+          updateBg(color)
         }
       }
     }

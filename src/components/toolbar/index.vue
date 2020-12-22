@@ -2,7 +2,7 @@
   <div class="toolbar">
     <div class="left">速写板</div>
     <div class="operate lh20">
-        <svg-icon class="mr10" v-for="item in iconList" :key="item" :icon-class="item" @icon-click="onIconClick"></svg-icon>
+        <svg-icon class="mr10"  v-for="item in iconList" :key="item" :icon-class="item" :class="{'color-red':curIcon === item}" @icon-click="onIconClick"></svg-icon>
     </div>
   </div>
 </template>
@@ -17,7 +17,11 @@
         iconList
       }
     },
-
+    computed:{
+      curIcon() {
+        return this.$store.state.operate
+      }
+    },
     methods: {
       onIconClick(val) {
         this.$store.commit('setOperate',val)
@@ -41,5 +45,8 @@
 .operate{
 
 
+}
+.color-red{
+  color:red;
 }
 </style>
