@@ -33,7 +33,6 @@
 
 <script>
   // import { ctx,canvas,virturalCanvas,virtualCtx } from '../../canvas'
-
   export default {
     name: '',
 
@@ -49,6 +48,9 @@
     },
     mounted() {
       this.isLoad = true
+      import('../../canvas').then(res=>{
+
+      })
     },
     computed:{
       lock() {
@@ -69,11 +71,12 @@
     },
     methods: {
       onColorPickerInput(obj) {
-        if(!this.isLoad)return 
-        const { cloneCanvas,cloneCtx,updateCanvas } = this
-        cloneCtx.fillStyle = obj.hex
-        cloneCtx.fillRect(0,0,cloneCanvas.width,cloneCanvas.height)
-        updateCanvas()
+        if(this.$instance) {
+          const {cloneCanvas,cloneCtx,updateCanvas} = this.$instance
+          cloneCtx.fillStyle = obj.hex
+          cloneCtx.fillRect(0,0,cloneCanvas.width,cloneCanvas.height)
+          updateCanvas()
+        }
       }
     }
   }
