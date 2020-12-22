@@ -7,7 +7,9 @@
         <el-input v-model="height" placeholder="高"></el-input>
       </div>
       <h4>背景颜色选择</h4>
-      <el-color-picker @change="onColorPickerInput"></el-color-picker>
+      <el-color-picker v-model="bgColor" @change="onColorPickerInput"></el-color-picker>
+      <h4>线宽</h4>
+      <el-input-number v-model="lineWidth" :min="1" :max="10" label="描述文字"></el-input-number>
     </div>
   </div>
 </template>
@@ -29,13 +31,28 @@
     computed:{
       lock() {
         return this.isOpen ? 'kaisuo' : 'suo'
+      },
+      lineWidth:{
+        get(){
+          return this.$store.state.lineWidth
+        },
+        set(value){
+          this.$store.commit('setLineWidth',value)
+        }
+      },
+      bgColor:{
+        get() {
+          return this.$store.state.bgColor
+        },
+        set(val) {
+          this.$store.commit('setBgColor',val)
+        }
       }
     },
     methods: {
-      onColorPickerInput(color) {
+      onColorPickerInput() {
         if(this.$instance) {
-          const {updateBg} = this.$instance
-          updateBg(color)
+          this.$instance.update()
         }
       }
     }

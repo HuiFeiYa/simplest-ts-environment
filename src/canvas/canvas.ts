@@ -4,7 +4,7 @@ export class VirtualCanvas {
   private canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
   private imageData!:ImageData
-  private originData!:ImageData
+  public tempData!:ImageData
   private color = '#fff'
   public cloneCanvas!:HTMLCanvasElement;
   public cloneCtx!:CanvasRenderingContext2D
@@ -31,6 +31,7 @@ export class VirtualCanvas {
     this.cloneCanvas.width = canvas.width
     this.cloneCanvas.height = canvas.height
     this.cloneCanvas.style.background = '#fff'
+    // document.getElementsByClassName('toolbar')[0].appendChild(this.cloneCanvas)
     this.cloneCtx = this.cloneCanvas.getContext('2d') as CanvasRenderingContext2D
     this.init()
   }
@@ -47,12 +48,45 @@ export class VirtualCanvas {
     this.mouseup()
     // 绑定原型上函数的this指向
     this.updateCanvas = this.updateCanvas.bind(this)
-    this.updateBg = this.updateBg.bind(this)
+    this.update = this.update.bind(this)
     const { top,left } = this.canvas.getBoundingClientRect()
     // 更新画板的位置
     this.boundPos = { top,left }
     // 默认为铅笔状态
-    store.commit('setOperate','qianbi')
+    // store.commit('setOperate','qianbi')
+    store.commit('setOperate','ziti')
+    this.saveSnapshot()
+    this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
+    // 监听全局的点击事件
+    window.addEventListener('click',(e)=>{
+      if(e.target !== this.canvas){
+        store.commit('setCursor',false)
+      }
+      store.commit('clearKey')
+    })
+    document.addEventListener('keydown',(e:KeyboardEvent) =>{
+      // 只有输入状态下
+      if(store.state.isInput){
+        store.commit('setCursor',false)
+        
+        if(e.key === 'Backspace'){
+          store.commit('deleteOne')
+          // 将写文案之前的像素更新进来
+          this.cloneCtx.putImageData(this.tempData,0,0)
+        }else{
+          // 清除光标的图像
+          this.applySnapshot()
+          store.commit('setKeybord',e.key)
+        }
+        this.updateText()
+      }
+    })
+  }
+  updateText() {
+    const { x,y } = this.downPos
+    this.cloneCtx.font = "28px serif"
+    this.cloneCtx.fillText(store.state.keybord,x,y)
+    this.update()
     this.saveSnapshot()
   }
   mousedown() {
@@ -86,7 +120,7 @@ export class VirtualCanvas {
   updateMousedownPos(e:MouseEvent) {
     this.downPos = this.pos(e)
   }
-  updateBg(color:string) {
+  update() {
     // 将之前的 ctx 状态存储到栈中
     this.ctx.save()
     // 清除展示画板的内容
@@ -94,14 +128,9 @@ export class VirtualCanvas {
     this.updateCanvas()
     // 绘制背景的时候改为,在现有画布内容后面绘制新的图形
     this.ctx.globalCompositeOperation = 'destination-over'
-    this.ctx.fillStyle = color
+    this.ctx.fillStyle = store.state.bgColor
     this.ctx.fillRect(0,0,this.width,this.height)
     this.ctx.restore()
-    this.color = color
-  }
-  // mousemove 重复使用 ctx.drawImage 会导致渲染错误 --todo
-  draw() {
-    this.updateBg(this.color)
   }
   updateCanvas() {
     this.ctx.drawImage(this.cloneCanvas,0,0,this.width,this.height)
