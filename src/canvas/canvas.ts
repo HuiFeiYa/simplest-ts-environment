@@ -1,4 +1,6 @@
-class VirtualCanvas {
+import store from '../store/index'
+import { mousedown,mouseup,mousemove } from './event'
+export class VirtualCanvas {
   private canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
   public cloneCanvas!:HTMLCanvasElement;
@@ -43,31 +45,13 @@ class VirtualCanvas {
     this.boundPos = { top,left }
   }
   mousedown() {
-    this.canvas.addEventListener('mousedown',e => {
-      // 当鼠标 mousedown 时候，更新画笔的起点
-      this.updateCtxPos(e)
-      const { x, y } = this.ctxPos
-      this.cloneCtx.beginPath()
-      this.cloneCtx.moveTo(x,y)
-      // 标记是否开始绘画
-      this.isStart = true
-    })
+    this.canvas.addEventListener('mousedown',mousedown.bind(this))
   }
   mousemove() {
-    this.canvas.addEventListener('mousemove',(e) => {
-      if(this.isStart) {
-        this.updateCtxPos(e)
-        const { x, y } = this.ctxPos
-        this.cloneCtx.lineTo(x,y)
-        this.cloneCtx.stroke()
-        this.updateCanvas()
-      }
-    })
+    this.canvas.addEventListener('mousemove',mousemove.bind(this))
   }
   mouseup() {
-    this.canvas.addEventListener('mouseup',e => {
-      this.isStart = false
-    })
+    this.canvas.addEventListener('mouseup',mouseup.bind(this))
   }
   updateCtxPos(e:MouseEvent) {
     const { clientX,clientY } = e
@@ -80,8 +64,7 @@ class VirtualCanvas {
   updateBg(color:string) {
     // 将之前的 ctx 状态存储到栈中
     this.ctx.save()
-    console.log('clientX,clientY',this.width,this.height)
-
+    // 清除展示画板的内容
     this.ctx.clearRect(0,0,this.width,this.height)
     this.updateCanvas()
     // 绘制背景的时候改为,在现有画布内容后面绘制新的图形

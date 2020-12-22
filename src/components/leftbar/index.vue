@@ -32,7 +32,6 @@
 </template>
 
 <script>
-  // import { ctx,canvas,virturalCanvas,virtualCtx } from '../../canvas'
   export default {
     name: '',
 
@@ -45,12 +44,6 @@
         color:'',
         isLoad:false
       }
-    },
-    mounted() {
-      this.isLoad = true
-      import('../../canvas').then(res=>{
-
-      })
     },
     computed:{
       lock() {

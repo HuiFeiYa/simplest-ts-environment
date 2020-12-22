@@ -1,5 +1,5 @@
 import { canvasImg,loadImg } from './element'
-import { RectW,RectH } from './types/index'
+import { RectW,RectH } from '../types/index'
 export async function createPattern(ctx:CanvasRenderingContext2D,path:string):Promise<CanvasPattern>
 export async function createPattern(ctx:CanvasRenderingContext2D,path:string,a:number,b:number):Promise<CanvasPattern>
 export async function createPattern(ctx:CanvasRenderingContext2D,path:string,a:RectW|RectH):Promise<CanvasPattern>

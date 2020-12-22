@@ -1,4 +1,4 @@
-import { RectW,RectH } from './types/index'
+import { RectW,RectH } from '../types/index'
 // 两者都传数字设置宽高
 export async function canvasImg(path:string,a:number,b:number):Promise<HTMLCanvasElement>
 // 传一个值的时候带上 type 标注是 width | height

@@ -2,22 +2,27 @@
   <div class="toolbar">
     <div class="left">速写板</div>
     <div class="operate lh20">
-        <svg-icon class="mr10" v-for="item in iconList" :key="item" :icon-class="item" v-on="$listeners"></svg-icon>
+        <svg-icon class="mr10" v-for="item in iconList" :key="item" :icon-class="item" @icon-click="onIconClick"></svg-icon>
     </div>
   </div>
 </template>
 
 <script>
+  import { iconList } from './config'
   export default {
     name: '',
 
     data() {
       return {
-        iconList:['qianbi','hengxian','ziti']
+        iconList
       }
     },
 
-    methods: {}
+    methods: {
+      onIconClick(val) {
+        this.$store.commit('setOperate',val)
+      }
+    }
   }
 </script>
 

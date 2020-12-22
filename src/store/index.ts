@@ -4,11 +4,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state:{
-    canvasInstance:null
+    operate:''
   },
   mutations:{
-    canvasInstance(state,canvasInstance:any) {
-      state.canvasInstance = canvasInstance;
+    setOperate(state,type) {
+      state.operate = type
     }
   }
 })

@@ -21,6 +21,7 @@
 .draw{
   flex-grow: 1;
   background-color: #eee;
+  overflow: hidden;
 }
 #canvas{
   background-color: #fff;

@@ -5,7 +5,7 @@ import Vuetify from './plugins/vuetify'
 import './assets/style/index.less'
 import Vuex from 'vuex'
 import store from './store/index'
-import Canvas from './canvas'
+import Canvas from './canvas/canvas'
 Vue.component('svg-icon',SvgIcon)
 // @ts-ignore
 Vue.use(Canvas)

@@ -21,16 +21,6 @@ export default {
     rightbar,
     draw
   },
-  mounted() {
-    // 使用vue模版中的dom需要等dom加载完后执行 mian.ts 中的代码
-    // 如果使用 index.html 模版中的dom，可以放到 script 中的顶端位置
-    import('./canvas').then(async res=>{
-      const instance = await res.default
-      // console.log(instance.ctx)
-      // 存储 canvas 上下文
-      this.$store.commit('canvasInstance',instance)
-    })
-  },
   methods:{
     onIconClick(type) {
       console.log(type)
