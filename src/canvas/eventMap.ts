@@ -48,12 +48,11 @@ export const down = {
   },
   tuxing(this:VirtualCanvas,e:MouseEvent){
     const { x,y } = this.pos(e)
-    console.log(x,y)
     for(let path of Object.entries(this.shapePath)) {
       const [key,value] = path;
       // 判断图形时候是否点击到对应的 path
       // @ts-ignore
-      if(this.cloneCtx.isPointInPath(value,x,y)){
+      if(store.state.shape && this.cloneCtx.isPointInPath(value,x,y)){
         this.canvas.style.cursor = key
         store.commit('setDirection',key)
         return 
@@ -123,6 +122,7 @@ export const move = {
     'ne-resize'(this:VirtualCanvas,e:MouseEvent){
       this.updateCtxPos(e)
       changeSide.call(this)
+      // this.applyShapeImageData()
     },
     'se-resize'(this:VirtualCanvas,e:MouseEvent){},
     'sw-resize'(this:VirtualCanvas,e:MouseEvent){},
@@ -134,11 +134,11 @@ function changeSide(this:VirtualCanvas) {
   const { x,y,side } = store.state.shapePos
   this.applyShapeImageData()
   shapeEvent[shape].call(this,x,y,side + diffX);
-  shapeControl[shape].call(this,x,y,side+diffX);
+  // shapeControl[shape].call(this,x,y,side+diffX);
 }
 // 当点击非选中图形时候重新绘制页面
 function drawCurShape(this:VirtualCanvas) {
-  if(!store.getters.isMoveShape) {
+  if(!store.state.shape) {
      return 
   }
   this.applyShapeImageData()
@@ -147,8 +147,10 @@ function drawCurShape(this:VirtualCanvas) {
   const diffY = this.ctxPos.y - this.downPos.y
   const { x,y,side } = store.state.shapePos
   store.commit('setShapePos',{x:x + diffX,y:y + diffY,side})
-  // 重新绘制图形
-  shapeEvent[store.state.shape].call(this,x + diffX,y + diffY,side)
+  if(store.state.shape) {
+    // 重新绘制图形
+    shapeEvent[store.state.shape].call(this,x + diffX,y + diffY,side)
+  }
   // 重置path存储
   store.commit('setShape','')
   this.setPath({})
@@ -180,7 +182,12 @@ export const up = {
       store.commit('setShapePos',{x:store.state.shapePos.x + diffX,y:store.state.shapePos.y + diffY,side:store.state.shapePos.side})
     },
     'nw-resize'(this:VirtualCanvas,e:MouseEvent){},
-    'ne-resize'(this:VirtualCanvas,e:MouseEvent){},
+    'ne-resize'(this:VirtualCanvas,e:MouseEvent){
+      // this.applyShapeImageData()
+      // changeSide.call(this)
+      this.saveShapeImageData()
+      // this.saveSnapshot()
+    },
     'se-resize'(this:VirtualCanvas,e:MouseEvent){},
     'sw-resize'(this:VirtualCanvas,e:MouseEvent){},
   }

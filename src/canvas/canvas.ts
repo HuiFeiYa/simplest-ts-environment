@@ -62,7 +62,7 @@ export class VirtualCanvas {
     this.boundPos = { top,left }
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
-    store.commit('setOperate','qingchu')
+    store.commit('setOperate','tuxing')
     // store.commit('setShape','sibianxing')
     this.saveSnapshot()
     this.saveShapeImageData()
@@ -72,10 +72,11 @@ export class VirtualCanvas {
         store.commit('setCursor',false)
       }
       store.commit('clearKey')
+      this.canvas.style.cursor = 'default'
     })
     document.addEventListener('keydown',(e:KeyboardEvent) =>{
       // 只有输入状态下
-      if(store.state.isInput && !store.getters.isMoveShape){
+      if(store.state.isInput && !store.state.shape){
         store.commit('setCursor',false)
         
         if(e.key === 'Backspace'){

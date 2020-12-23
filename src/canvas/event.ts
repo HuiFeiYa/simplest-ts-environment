@@ -19,7 +19,7 @@ export function mousemove(this:VirtualCanvas,e:MouseEvent){
     const {operate,direction}  = store.state
     this.updateCtxPos(e)
     move[operate].call(this,e)
-    if(store.getters.isMoveShape) {
+    if(store.state.shape) {
       move.figure[direction].call(this,e)
     }
   }
@@ -27,7 +27,7 @@ export function mousemove(this:VirtualCanvas,e:MouseEvent){
 export function mouseup(this:VirtualCanvas,e:MouseEvent){
   this.isStart = false
   const {operate,direction}  = store.state
-  if(store.getters.isMoveShape) {
+  if(store.state.shape) {
     up.figure[direction].call(this,e)
   }else{
     up[operate].call(this)
@@ -42,9 +42,10 @@ export function drawShape(this:VirtualCanvas) {
 }
 export function setPath(this:VirtualCanvas,cX:number,cY:number) {
   const shape = store.state.shape
+  if(!shape) return 
   const move = shapeEvent[shape].call(this,cX,cY)
   this.saveSnapshot()
-  const control = shapeControl[shape].call(this,cX,cY)
+  // const control = shapeControl[shape].call(this,cX,cY)
   // 将path存储到 VirtualCanvas.shapePath 中
-  this.setPath(Object.assign({move},control))
+  this.setPath(Object.assign({move}))
 }
