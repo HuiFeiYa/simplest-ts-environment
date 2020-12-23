@@ -6,7 +6,7 @@ const cursor = {
   width:2
 }
 // shape形状的大小
-const side = 100
+const defaultSide = 100
 // 控制点矩形的大小
 const cSide = 20
 let hasSet = false
@@ -25,7 +25,6 @@ function blink(_this:any) {
       }else{
         clearTimeout(k)
         hasSet = false
-        // store.commit('setCursor',false)
       }
     }, 500);
   },500)
@@ -41,7 +40,7 @@ export const down = {
   ziti(this:VirtualCanvas,e:MouseEvent) {
     if(!hasSet) {
       // 当鼠标重新点击其他位置时候保存当前画板的内容。
-      this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
+      this.shapeData = this.cloneCtx.getImageData(0,0,this.width,this.height)
       blink(this)
       hasSet = true
       store.commit('setCursor',true)
@@ -67,7 +66,8 @@ export const down = {
     drawCurShape.call(this)
     this.update()
     console.log('未选中')
-  }
+  },
+  qingchu(this:VirtualCanvas,e:MouseEvent){}
 }
 export const move = {
   'qianbi'(this:VirtualCanvas,e:MouseEvent){
@@ -88,6 +88,26 @@ export const move = {
   },
   'ziti'(this:VirtualCanvas) {},
   tuxing(this:VirtualCanvas,e:MouseEvent){},
+  qingchu(this:VirtualCanvas,e:MouseEvent){
+    const r = 10
+    const { x,y } = this.ctxPos
+    this.applySnapshot()
+    this.cloneCtx.save()
+    this.cloneCtx.beginPath()
+    this.cloneCtx.arc(x-r/2,y-r/2,r,0,Math.PI*2,false)
+    this.cloneCtx.clip()
+    this.cloneCtx.clearRect(0,0,this.width,this.height)
+    this.saveSnapshot()
+    this.cloneCtx.arc(x-r/2,y-r/2,r+2,0,Math.PI*2,false)
+    this.cloneCtx.stroke()
+    this.cloneCtx.beginPath()
+    this.cloneCtx.arc(x-r/2,y-r/2,2,0,Math.PI*2,false)
+    this.cloneCtx.fillStyle = 'red'
+    this.cloneCtx.fill()
+    this.update()
+    this.cloneCtx.restore()
+    // this.update()
+  },
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){
@@ -100,10 +120,21 @@ export const move = {
       setPath.call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
     },
     'nw-resize'(this:VirtualCanvas,e:MouseEvent){},
-    'ne-resize'(this:VirtualCanvas,e:MouseEvent){},
+    'ne-resize'(this:VirtualCanvas,e:MouseEvent){
+      this.updateCtxPos(e)
+      changeSide.call(this)
+    },
     'se-resize'(this:VirtualCanvas,e:MouseEvent){},
     'sw-resize'(this:VirtualCanvas,e:MouseEvent){},
   }
+}
+function changeSide(this:VirtualCanvas) {
+  const diffX = this.ctxPos.x - this.downPos.x;
+  const shape = store.state.shape
+  const { x,y,side } = store.state.shapePos
+  this.applyShapeImageData()
+  shapeEvent[shape].call(this,x,y,side + diffX);
+  shapeControl[shape].call(this,x,y,side+diffX);
 }
 // 当点击非选中图形时候重新绘制页面
 function drawCurShape(this:VirtualCanvas) {
@@ -114,9 +145,10 @@ function drawCurShape(this:VirtualCanvas) {
   // 更新当前图形的位置
   const diffX = this.ctxPos.x - this.downPos.x;
   const diffY = this.ctxPos.y - this.downPos.y
-  store.commit('setShapePos',{x:store.state.shapePos.x + diffX,y:store.state.shapePos.y + diffY})
+  const { x,y,side } = store.state.shapePos
+  store.commit('setShapePos',{x:x + diffX,y:y + diffY,side})
   // 重新绘制图形
-  shapeEvent[store.state.shape].call(this,store.state.shapePos.x + diffX,store.state.shapePos.y + diffY)
+  shapeEvent[store.state.shape].call(this,x + diffX,y + diffY,side)
   // 重置path存储
   store.commit('setShape','')
   this.setPath({})
@@ -133,25 +165,19 @@ export const up = {
 
   },
   tuxing(this:VirtualCanvas){
-    this.saveSnapshot()
-    // 更新当前图形的位置
-    const diffX = this.ctxPos.x - this.downPos.x;
-    const diffY = this.ctxPos.y - this.downPos.y
-    store.commit('setShapePos',{x:store.state.shapePos.x + diffX,y:store.state.shapePos.y + diffY})
+    
+  },
+  qingchu(this:VirtualCanvas){
+    this.applySnapshot()
   },
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){
-      this.updateCtxPos(e)
+      this.saveSnapshot()
+      // 更新当前图形的位置
       const diffX = this.ctxPos.x - this.downPos.x;
       const diffY = this.ctxPos.y - this.downPos.y
-      this.applyShapeImageData()
-      // 移动的那个图形
-      const shape = store.state.shape
-      // 更新图形的位置
-      shapeEvent[shape].call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
-
-      console.log('pos',this.ctxPos,this.downPos)
+      store.commit('setShapePos',{x:store.state.shapePos.x + diffX,y:store.state.shapePos.y + diffY,side:store.state.shapePos.side})
     },
     'nw-resize'(this:VirtualCanvas,e:MouseEvent){},
     'ne-resize'(this:VirtualCanvas,e:MouseEvent){},
@@ -161,7 +187,7 @@ export const up = {
 }
 
 export const shapeEvent = {
-  sibianxing(this:VirtualCanvas,cX:number,cY:number) {
+  sibianxing(this:VirtualCanvas,cX:number,cY:number,side:number=defaultSide) {
     const path = new Path2D()
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.beginPath()
@@ -175,7 +201,7 @@ export const shapeEvent = {
     this.update()
     return path
   },
-  sibianxing1(this:VirtualCanvas,cX:number,cY:number) {
+  sibianxing1(this:VirtualCanvas,cX:number,cY:number,side:number=defaultSide) {
     this.cloneCtx.beginPath()
     const path = new Path2D()
     this.cloneCtx.strokeStyle = '#000'
@@ -185,7 +211,7 @@ export const shapeEvent = {
     this.update()
     return path
   },
-  sanjiaoxing(this:VirtualCanvas,cX:number,cY:number){
+  sanjiaoxing(this:VirtualCanvas,cX:number,cY:number,side:number=defaultSide){
     const path = new Path2D()
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.beginPath()
@@ -201,14 +227,9 @@ export const shapeEvent = {
 }
 
 export const shapeControl = {
-  sibianxing(this:VirtualCanvas,x:number,y:number){
-    // const { width,height } = this
-    // const path = new Path2D()
-    // const x = width / 2;
-    // const y = height / 2
-    // return path
+  sibianxing(this:VirtualCanvas,x:number,y:number,side:number=defaultSide){
   },
-  sibianxing1(this:VirtualCanvas,x:number,y:number){
+  sibianxing1(this:VirtualCanvas,x:number,y:number,side:number=defaultSide){
     this.cloneCtx.beginPath()
     const { width,height } = this
     const p1 = new Path2D()
@@ -232,7 +253,7 @@ export const shapeControl = {
       'sw-resize':p4,
     }
   },
-  sanjiaoxing(this:VirtualCanvas,x:number,y:number){
+  sanjiaoxing(this:VirtualCanvas,x:number,y:number,side:number=defaultSide){
     const { width,height } = this
     const path = new Path2D()
     return path

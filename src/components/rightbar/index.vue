@@ -1,5 +1,5 @@
 <template>
-  <div class="rightbar bg-theme hp100">
+  <div v-if="isShow" class="rightbar bg-theme hp100">
     <div class="content">
       <svg-icon v-for="item in iconList" :key="item" class="fs20" :icon-class="item" @icon-click="onIconClick"></svg-icon>
     </div>
@@ -16,7 +16,11 @@
         iconList
       }
     },
-
+    computed:{
+      isShow() {
+        return this.$store.state.operate === 'tuxing'
+      }
+    },
     methods: {
       onIconClick(val,e) {
         this.$store.commit('setShape',val)

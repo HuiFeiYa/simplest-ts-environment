@@ -20,7 +20,8 @@ export default new Vuex.Store({
     direction,
     shapePos:{
       x:0,
-      y:0
+      y:0,
+      side:100
     }
   },
   mutations:{
@@ -64,7 +65,7 @@ export default new Vuex.Store({
       return state.isCusor
     },
     isMoveShape(state) {
-      return state.shape
+      return state.operate === 'tuxing'
     } 
   }
 })

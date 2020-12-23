@@ -48,5 +48,6 @@
 }
 .color-red{
   color:red;
+  background-color: #fff;
 }
 </style>

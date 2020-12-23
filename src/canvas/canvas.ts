@@ -4,7 +4,6 @@ export class VirtualCanvas {
   public canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
   private imageData!:ImageData
-  public tempData!:ImageData
   public shapeData!:ImageData
   private color = '#fff'
   public cloneCanvas!:HTMLCanvasElement;
@@ -63,7 +62,7 @@ export class VirtualCanvas {
     this.boundPos = { top,left }
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
-    store.commit('setOperate','tuxing')
+    store.commit('setOperate','qingchu')
     // store.commit('setShape','sibianxing')
     this.saveSnapshot()
     this.saveShapeImageData()
@@ -97,9 +96,6 @@ export class VirtualCanvas {
   }
   applyShapeImageData() {
     this.cloneCtx.putImageData(this.shapeData,0,0)
-  }
-  saveTempImageData() {
-    this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
   }
   drawShape() {
     drawShape.call(this)
@@ -143,7 +139,6 @@ export class VirtualCanvas {
   }
   // 更新 mousedown 时候的位置
   updateMousedownPos(e:MouseEvent) {
-    console.log(e.clientX,e.clientY)
     this.downPos = this.pos(e)
   }
   update() {

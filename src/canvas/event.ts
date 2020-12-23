@@ -26,14 +26,18 @@ export function mousemove(this:VirtualCanvas,e:MouseEvent){
 }
 export function mouseup(this:VirtualCanvas,e:MouseEvent){
   this.isStart = false
-  const operate  = store.state.operate
-  up[operate].call(this)
+  const {operate,direction}  = store.state
+  if(store.getters.isMoveShape) {
+    up.figure[direction].call(this,e)
+  }else{
+    up[operate].call(this)
+  }
 }
 export function drawShape(this:VirtualCanvas) {
   const { width,height } = this
   const cX = width / 2;
   const cY = height / 2
-  store.commit('setShapePos',{x:cX,y:cY})
+  store.commit('setShapePos',{x:cX,y:cY,side:store.state.shapePos.side})
   setPath.call(this,cX,cY);
 }
 export function setPath(this:VirtualCanvas,cX:number,cY:number) {
