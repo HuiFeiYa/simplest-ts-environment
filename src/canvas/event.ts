@@ -1,6 +1,6 @@
 import { VirtualCanvas } from './canvas';
 import store from '../store/index'
-import { down,move,up } from './eventMap'
+import { down,move,up,shapeEvent } from './eventMap'
 export function mousedown(this:VirtualCanvas,e:MouseEvent){
   console.log('down')
       const operate  = store.state.operate
@@ -26,4 +26,9 @@ export function mouseup(this:VirtualCanvas,e:MouseEvent){
   this.isStart = false
   const operate  = store.state.operate
   up[operate].call(this)
+}
+export function drawShape(this:VirtualCanvas) {
+  const shape = store.state.shape
+  console.log('1')
+  shapeEvent[shape].call(this)
 }

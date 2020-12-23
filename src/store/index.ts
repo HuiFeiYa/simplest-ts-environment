@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { IconType } from '../components/toolbar/config'
+import { Shape } from '../components/rightbar/config'
 Vue.use(Vuex)
 // 在外面定义好类型
 let operate!:IconType
+let shape !:Shape
 export default new Vuex.Store({
   state:{
     operate,
@@ -11,7 +13,8 @@ export default new Vuex.Store({
     bgColor:'#fff',
     isCusor:false,
     keybord:'',
-    isInput:true
+    isInput:true,
+    shape
   },
   mutations:{
     setOperate(state,type:IconType) {
@@ -38,6 +41,9 @@ export default new Vuex.Store({
     },
     clearKey(state) {
       state.keybord = ''
+    },
+    setShape(state,shape:Shape) {
+      state.shape = shape
     }
   },
   getters:{

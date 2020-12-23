@@ -73,3 +73,43 @@ export const up = {
 
   }
 }
+
+export const shapeEvent = {
+  sibianxing(this:VirtualCanvas) {
+    const { width,height } = this
+    const cX = width / 2;
+    const cY = height / 2
+    const side = 80
+    this.cloneCtx.beginPath()
+    this.cloneCtx.lineWidth = 2
+    this.cloneCtx.moveTo(cX - side/(2*Math.tan(Math.PI/3)),cY-side/2)
+    this.cloneCtx.lineTo(cX + side * Math.cos(Math.PI/6),cY-side/2)
+    this.cloneCtx.lineTo(cX+ side * Math.cos(Math.PI/6) - side / 2,cY+side/2)
+    this.cloneCtx.lineTo(cX - side/(2*Math.tan(Math.PI/3))-side/2,cY+side/2)
+    this.cloneCtx.closePath()
+    this.cloneCtx.stroke()
+    this.update()
+  },
+  sibianxing1(this:VirtualCanvas) {
+    const { width,height } = this
+    const cX = width / 2;
+    const cY = height / 2
+    const side = 120
+    this.cloneCtx.lineWidth = 2
+    this.cloneCtx.strokeRect(cX-side/2,cY-side/2,side,side)
+    this.update()
+  },
+  sanjiaoxing(this:VirtualCanvas){
+    const { width,height } = this
+    const cX = width / 2;
+    const cY = height / 2
+    const side = 70
+    this.cloneCtx.lineWidth = 2 
+    this.cloneCtx.moveTo(cX,cY-side)
+    this.cloneCtx.lineTo(cX+Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
+    this.cloneCtx.lineTo(cX-Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
+    this.cloneCtx.closePath()
+    this.cloneCtx.stroke()
+    this.update()
+  }
+}

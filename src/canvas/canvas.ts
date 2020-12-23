@@ -1,5 +1,5 @@
 import store from '../store/index'
-import { mousedown, mouseup, mousemove } from './event';
+import { mousedown, mouseup, mousemove,drawShape } from './event';
 export class VirtualCanvas {
   private canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
@@ -55,6 +55,7 @@ export class VirtualCanvas {
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
     store.commit('setOperate','ziti')
+    store.commit('setShape','sibianxing')
     this.saveSnapshot()
     this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
     // 监听全局的点击事件
@@ -81,6 +82,9 @@ export class VirtualCanvas {
         this.updateText()
       }
     })
+  }
+  drawShape() {
+    drawShape.call(this)
   }
   updateText() {
     const { x,y } = this.downPos
