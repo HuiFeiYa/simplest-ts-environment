@@ -20,7 +20,8 @@
     methods: {
       onIconClick(val,e) {
         this.$store.commit('setShape',val)
-        this.$instance.saveTempImageData()
+        // 选择形状的时候存储当前画面
+        this.$instance.saveShapeImageData()
         this.$instance.drawShape()
       }
     }

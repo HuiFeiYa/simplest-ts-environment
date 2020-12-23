@@ -5,6 +5,7 @@ export class VirtualCanvas {
   private ctx!:CanvasRenderingContext2D
   private imageData!:ImageData
   public tempData!:ImageData
+  public shapeData!:ImageData
   private color = '#fff'
   public cloneCanvas!:HTMLCanvasElement;
   public cloneCtx!:CanvasRenderingContext2D
@@ -65,7 +66,7 @@ export class VirtualCanvas {
     store.commit('setOperate','tuxing')
     // store.commit('setShape','sibianxing')
     this.saveSnapshot()
-    this.saveTempImageData()
+    this.saveShapeImageData()
     // 监听全局的点击事件
     window.addEventListener('click',(e)=>{
       if(e.target !== this.canvas){
@@ -81,7 +82,7 @@ export class VirtualCanvas {
         if(e.key === 'Backspace'){
           store.commit('deleteOne')
           // 将写文案之前的像素更新进来
-          this.applyTempImageData()
+          this.applyShapeImageData()
         }else{
           // 清除光标的图像
           this.applySnapshot()
@@ -91,11 +92,14 @@ export class VirtualCanvas {
       }
     })
   }
+  saveShapeImageData() {
+    this.shapeData = this.cloneCtx.getImageData(0,0,this.width,this.height)
+  }
+  applyShapeImageData() {
+    this.cloneCtx.putImageData(this.shapeData,0,0)
+  }
   saveTempImageData() {
     this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
-  }
-  applyTempImageData() {
-    this.cloneCtx.putImageData(this.tempData,0,0)
   }
   drawShape() {
     drawShape.call(this)

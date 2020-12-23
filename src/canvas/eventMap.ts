@@ -63,7 +63,8 @@ export const down = {
     }
     // 如果没有选中其中任何一个 path，将 canvas 置为未选中
     this.canvas.style.cursor = 'default'
-    this.applySnapshot()
+    // this.applySnapshot()
+    drawCurShape.call(this)
     this.update()
     console.log('未选中')
   }
@@ -95,18 +96,31 @@ export const move = {
       const diffY = this.ctxPos.y - this.downPos.y
       // 移动的那个图形
       const shape = store.state.shape
-      this.applyTempImageData()
+      this.applyShapeImageData()
       setPath.call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
-      // 更新图形的位置
-      // shapeEvent[shape].call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
-      // shapeControl[shape].call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
-      // console.log('pos',this.ctxPos,this.downPos)
     },
     'nw-resize'(this:VirtualCanvas,e:MouseEvent){},
     'ne-resize'(this:VirtualCanvas,e:MouseEvent){},
     'se-resize'(this:VirtualCanvas,e:MouseEvent){},
     'sw-resize'(this:VirtualCanvas,e:MouseEvent){},
   }
+}
+// 当点击非选中图形时候重新绘制页面
+function drawCurShape(this:VirtualCanvas) {
+  if(!store.getters.isMoveShape) {
+     return 
+  }
+  this.applyShapeImageData()
+  // 更新当前图形的位置
+  const diffX = this.ctxPos.x - this.downPos.x;
+  const diffY = this.ctxPos.y - this.downPos.y
+  store.commit('setShapePos',{x:store.state.shapePos.x + diffX,y:store.state.shapePos.y + diffY})
+  // 重新绘制图形
+  shapeEvent[store.state.shape].call(this,store.state.shapePos.x + diffX,store.state.shapePos.y + diffY)
+  // 重置path存储
+  store.commit('setShape','')
+  this.setPath({})
+  this.saveShapeImageData()
 }
 export const up = {
   'qianbi'(this:VirtualCanvas){
@@ -131,7 +145,7 @@ export const up = {
       this.updateCtxPos(e)
       const diffX = this.ctxPos.x - this.downPos.x;
       const diffY = this.ctxPos.y - this.downPos.y
-      this.applyTempImageData()
+      this.applyShapeImageData()
       // 移动的那个图形
       const shape = store.state.shape
       // 更新图形的位置
