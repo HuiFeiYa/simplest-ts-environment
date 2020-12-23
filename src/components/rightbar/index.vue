@@ -20,8 +20,8 @@
     methods: {
       onIconClick(val,e) {
         this.$store.commit('setShape',val)
+        this.$instance.saveTempImageData()
         this.$instance.drawShape()
-
       }
     }
   }

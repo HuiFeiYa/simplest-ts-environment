@@ -1,7 +1,7 @@
 import store from '../store/index'
 import { mousedown, mouseup, mousemove,drawShape } from './event';
 export class VirtualCanvas {
-  private canvas !:HTMLCanvasElement;
+  public canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
   private imageData!:ImageData
   public tempData!:ImageData
@@ -24,6 +24,14 @@ export class VirtualCanvas {
     y:0
   }
   public isStart = false
+  // 存储形状的路径
+  public shapePath = {
+    move:Path2D,
+    'nw-resize':Path2D,
+    'ne-resize':Path2D,
+    'se-resize':Path2D,
+    'sw-resize':Path2D,
+  }
   constructor(canvas:HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D
@@ -54,10 +62,10 @@ export class VirtualCanvas {
     this.boundPos = { top,left }
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
-    store.commit('setOperate','ziti')
-    store.commit('setShape','sibianxing')
+    store.commit('setOperate','tuxing')
+    // store.commit('setShape','sibianxing')
     this.saveSnapshot()
-    this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
+    this.saveTempImageData()
     // 监听全局的点击事件
     window.addEventListener('click',(e)=>{
       if(e.target !== this.canvas){
@@ -67,13 +75,13 @@ export class VirtualCanvas {
     })
     document.addEventListener('keydown',(e:KeyboardEvent) =>{
       // 只有输入状态下
-      if(store.state.isInput){
+      if(store.state.isInput && !store.getters.isMoveShape){
         store.commit('setCursor',false)
         
         if(e.key === 'Backspace'){
           store.commit('deleteOne')
           // 将写文案之前的像素更新进来
-          this.cloneCtx.putImageData(this.tempData,0,0)
+          this.applyTempImageData()
         }else{
           // 清除光标的图像
           this.applySnapshot()
@@ -83,8 +91,17 @@ export class VirtualCanvas {
       }
     })
   }
+  saveTempImageData() {
+    this.tempData = this.cloneCtx.getImageData(0,0,this.width,this.height)
+  }
+  applyTempImageData() {
+    this.cloneCtx.putImageData(this.tempData,0,0)
+  }
   drawShape() {
     drawShape.call(this)
+  }
+  setPath(shapePath:any) {
+    this.shapePath = shapePath
   }
   updateText() {
     const { x,y } = this.downPos
@@ -112,8 +129,8 @@ export class VirtualCanvas {
     const { clientX,clientY } = e
     const { top,left } = this.boundPos
     return {
-      x:clientX - left,
-      y:clientY - top
+      x:(clientX - left),
+      y:(clientY - top)
     }
   }
   // 更新 mousemove 的鼠标位置
@@ -122,6 +139,7 @@ export class VirtualCanvas {
   }
   // 更新 mousedown 时候的位置
   updateMousedownPos(e:MouseEvent) {
+    console.log(e.clientX,e.clientY)
     this.downPos = this.pos(e)
   }
   update() {

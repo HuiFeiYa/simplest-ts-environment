@@ -3,9 +3,11 @@ import Vuex from 'vuex'
 import { IconType } from '../components/toolbar/config'
 import { Shape } from '../components/rightbar/config'
 Vue.use(Vuex)
+type Direction = 'move' | 'nw-resize' | 'ne-resize' | 'sw-resize' | 'sw-resize'
 // 在外面定义好类型
 let operate!:IconType
 let shape !:Shape
+let direction!: Direction
 export default new Vuex.Store({
   state:{
     operate,
@@ -14,7 +16,12 @@ export default new Vuex.Store({
     isCusor:false,
     keybord:'',
     isInput:true,
-    shape
+    shape,
+    direction,
+    shapePos:{
+      x:0,
+      y:0
+    }
   },
   mutations:{
     setOperate(state,type:IconType) {
@@ -44,11 +51,20 @@ export default new Vuex.Store({
     },
     setShape(state,shape:Shape) {
       state.shape = shape
+    },
+    setDirection(state,direction:Direction) {
+      state.direction = direction
+    },
+    setShapePos(state,val) {
+      state.shapePos = val
     }
   },
   getters:{
     isInput(state) {
       return state.isCusor
-    }
+    },
+    isMoveShape(state) {
+      return state.shape
+    } 
   }
 })

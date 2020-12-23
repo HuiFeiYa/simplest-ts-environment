@@ -1,8 +1,7 @@
 import { VirtualCanvas } from './canvas';
 import store from '../store/index'
-import { down,move,up,shapeEvent } from './eventMap'
+import { down,move,up,shapeEvent,shapeControl } from './eventMap'
 export function mousedown(this:VirtualCanvas,e:MouseEvent){
-  console.log('down')
       const operate  = store.state.operate
       this.updateCtxPos(e)
       this.updateMousedownPos(e)
@@ -17,9 +16,12 @@ export function mousedown(this:VirtualCanvas,e:MouseEvent){
 }
 export function mousemove(this:VirtualCanvas,e:MouseEvent){
   if(this.isStart) {
-    const operate  = store.state.operate
+    const {operate,direction}  = store.state
     this.updateCtxPos(e)
     move[operate].call(this,e)
+    if(store.getters.isMoveShape) {
+      move.figure[direction].call(this,e)
+    }
   }
 }
 export function mouseup(this:VirtualCanvas,e:MouseEvent){
@@ -28,7 +30,17 @@ export function mouseup(this:VirtualCanvas,e:MouseEvent){
   up[operate].call(this)
 }
 export function drawShape(this:VirtualCanvas) {
+  const { width,height } = this
+  const cX = width / 2;
+  const cY = height / 2
+  store.commit('setShapePos',{x:cX,y:cY})
+  setPath.call(this,cX,cY);
+}
+export function setPath(this:VirtualCanvas,cX:number,cY:number) {
   const shape = store.state.shape
-  console.log('1')
-  shapeEvent[shape].call(this)
+  const move = shapeEvent[shape].call(this,cX,cY)
+  this.saveSnapshot()
+  const control = shapeControl[shape].call(this,cX,cY)
+  // 将path存储到 VirtualCanvas.shapePath 中
+  this.setPath(Object.assign({move},control))
 }
