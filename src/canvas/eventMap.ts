@@ -2,6 +2,7 @@ import { VirtualCanvas } from './canvas';
 import { setPath } from './event'
 import store from '../store'
 import { createPattern } from './pattern'
+import ImageEvent from './imageEvent'
 const cursor = {
   height:25,
   width:2
@@ -90,7 +91,7 @@ export const down = {
     // 重置画板
     this.applySnapshot()
     // 然后在绘制图形
-    this.importImg(this.image,imageWidth)
+    this.reDrawImage()
     this.update()
     console.log('未选中图片')
   },
@@ -130,7 +131,7 @@ export const move = {
     this.cloneCtx.stroke()
     this.update()
   },
-  'ziti'(this:VirtualCanvas) {},
+  'ziti'(this:VirtualCanvas,e:MouseEvent) {},
   tuxing(this:VirtualCanvas,e:MouseEvent){},
   qingchu(this:VirtualCanvas,e:MouseEvent){
     const r = 10
@@ -155,7 +156,10 @@ export const move = {
   shezhi(this:VirtualCanvas,e:MouseEvent){},
   'left-copy'(this:VirtualCanvas,e:MouseEvent){},
   right(this:VirtualCanvas,e:MouseEvent){},
-  daoru(this:VirtualCanvas,e:MouseEvent){},
+  daoru(this:VirtualCanvas,e:MouseEvent){
+    const { direction } = store.state
+    ImageEvent[direction].call(this,e)
+  },
   daochu(this:VirtualCanvas,e:MouseEvent){},
   shanchu(this:VirtualCanvas,e:MouseEvent){},
   // 图形操作

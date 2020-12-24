@@ -119,6 +119,11 @@ export class VirtualCanvas {
     this.cloneCtx.drawImage(img,sx,sy,width,height)
     this.update()
   }
+  // 重新绘制图片
+  reDrawImage() {
+    const{imagePos: {x,y},imageWidth:w,imageHeight:h} = store.state
+    this.cloneCtx.drawImage(this.image,x,y,w,h)
+  }
   // 绘制图片的控制框
   drawImageControl() {
     const cw = 20
@@ -129,10 +134,10 @@ export class VirtualCanvas {
     const p4 = new Path2D()
     const p5 = new Path2D()
     const{imagePos: {x,y},imageWidth:w,imageHeight:h} = store.state
-    p1.rect(x-cw/2,y-ch/2,cw,ch)
-    p2.rect(x+w-cw/2,y-ch/2,cw,ch)
-    p3.rect(x+w-cw/2,y+h-ch/2,cw,ch)
-    p4.rect(x-cw/2,y+h-ch/2,cw,ch)
+    p1.rect(x-cw/2+w/2,y-ch/2,cw,ch)
+    p2.rect(x+w-cw/2,y-ch/2+h/2,cw,ch)
+    p3.rect(x+w-cw/2-w/2,y+h-ch/2,cw,ch)
+    p4.rect(x-cw/2,y+h-ch/2-h/2,cw,ch)
     p5.rect(x,y,w,h)
     this.cloneCtx.strokeStyle = 'blue'
     this.cloneCtx.stroke(p1)
