@@ -24,9 +24,19 @@ export default new Vuex.Store({
       side:100
     },
     head:1,
-    pattern:''
+    pattern:'',
+    canvasRect:{
+      width:600,
+      height:600
+    }
   },
   mutations:{
+    setCanvasRectWidth(state,width){
+      state.canvasRect.width = width
+    },
+    setCanvasRectHeight(state,height){
+      state.canvasRect.height = height
+    },
     setOperate(state,type:IconType) {
       state.operate = type
     },

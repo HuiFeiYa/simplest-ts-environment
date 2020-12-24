@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h4>填充样式</h4>
     <img class="icon" v-for="path in list" :key="path" :src="'/images/'+path+'.png'" alt="" @click="onClick(path)">
   </div>
 </template>

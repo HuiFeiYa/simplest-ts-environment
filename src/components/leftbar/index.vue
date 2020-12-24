@@ -4,8 +4,8 @@
       <template v-if="isShowConfig">
         <div class="flex align-center">
           <el-input v-model="width" placeholder="宽"></el-input>
-          <svg-icon style="font-size:20px" :icon-class="lock"></svg-icon>
-          <el-input v-model="height" placeholder="高"></el-input>
+          <svg-icon style="font-size:20px" :icon-class="lock" @icon-click="onIconClick"></svg-icon>
+          <el-input :disabled="!isOpen" v-model="height" placeholder="高" min="300" max="800"></el-input>
         </div>
         <h4>背景颜色选择</h4>
         <el-color-picker v-model="bgColor" @change="onColorPickerInput"></el-color-picker>
@@ -28,15 +28,32 @@
     },
     data() {
       return {
-        // 画板尺寸
-        width:'',
-        height:'',
         isOpen:false,
         color:'',
         isLoad:false
       }
     },
     computed:{
+      width:{
+        get() {
+          return this.$store.state.canvasRect.width
+        },
+        set(val) {
+          this.$store.commit('setCanvasRectWidth',val)
+          // 锁住的时候是联动的
+          if(!this.isOpen){
+            this.$store.commit('setCanvasRectHeight',val)
+          }
+        }
+      },
+      height:{
+        get() {
+          return this.$store.state.canvasRect.height
+        },
+        set(val) {
+          this.$store.commit('setCanvasRectHeight',val)
+        }
+      },
       operate() {
         return this.$store.state.operate
       },
@@ -73,8 +90,11 @@
       }
     },
     methods: {
+      onIconClick() {
+        this.isOpen = !this.isOpen
+      },
       onBgPatternClick(val) {
-        this.$store.commit('setPattern',val)
+        this.$store.commit('setBgColor',val)
         this.$instance.update(true)
       },
       onColorPickerInput() {
@@ -91,6 +111,7 @@
   width:200px;
   padding:0 10px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 .content{
   background-color: #fff;

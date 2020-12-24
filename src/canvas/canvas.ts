@@ -176,7 +176,7 @@ export class VirtualCanvas {
   updateMousedownPos(e:MouseEvent) {
     this.downPos = this.pos(e)
   }
-  async update(isPattern?:boolean) {
+  async update() {
     const { pattern,bgColor } = store.state
     // 将之前的 ctx 状态存储到栈中
     this.ctx.save()
@@ -185,11 +185,11 @@ export class VirtualCanvas {
     this.updateCanvas()
     // 绘制背景的时候改为,在现有画布内容后面绘制新的图形
     this.ctx.globalCompositeOperation = 'destination-over'
-    if(isPattern) { 
-       const p = await createPattern(this.cloneCtx, 'images/'+ pattern+'.png',40,40)
-       this.ctx.fillStyle = p
-    }else{
+    if(/\#/g.test(bgColor)) { 
       this.ctx.fillStyle = bgColor
+    }else{
+      const p = await createPattern(this.cloneCtx, 'images/'+ bgColor+'.png',40,40)
+       this.ctx.fillStyle = p
     }
     this.ctx.fillRect(0,0,this.width,this.height)
     this.ctx.restore()

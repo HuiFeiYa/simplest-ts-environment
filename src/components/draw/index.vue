@@ -1,6 +1,6 @@
 <template>
   <div class="draw">
-    <canvas id="canvas" width="600" height="600"></canvas>
+    <canvas id="canvas" :width="width" :height="height"></canvas>
   </div>
 </template>
 
@@ -12,7 +12,14 @@
       return {
       }
     },
-
+    computed:{
+      width() {
+        return this.$store.state.canvasRect.width
+      },
+      height() {
+        return this.$store.state.canvasRect.height
+      },
+    },
     methods: {}
   }
 </script>
