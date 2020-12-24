@@ -18,6 +18,12 @@
         <el-color-picker v-model="lineColor"></el-color-picker>
         <Icon @click="onLinePatternClick"></Icon>
       </template>
+      <template v-if="isShowZiti">
+        <h4>字体大小</h4>
+        <el-input-number v-model="fontSize"  label="描述文字"></el-input-number>
+        <h4>字体颜色</h4>
+        <el-color-picker v-model="fontColor"></el-color-picker>
+      </template>
     </div>
   </div>
 </template>
@@ -37,6 +43,22 @@
       }
     },
     computed:{
+      fontColor:{
+        get() {
+          return this.$store.state.fontColor
+        },
+        set(val) {
+          this.$store.commit('setFontColor',val)
+        }
+      },
+      fontSize:{
+        get() {
+          return this.$store.state.fontSize
+        },
+        set(val) {
+          this.$store.commit('setFontSize',val)
+        }
+      },
       width:{
         get() {
           return this.$store.state.canvasRect.width
@@ -68,6 +90,9 @@
       },
       isShowHengxian() {
         return this.operate === 'hengxian'
+      },
+      isShowZiti() {
+        return this.operate === 'ziti'
       },
       isShow() {
         return this.isShowConfig || this.isShowQianbi || this.isShowHengxian

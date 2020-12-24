@@ -29,9 +29,17 @@ export default new Vuex.Store({
     canvasRect:{
       width:600,
       height:600
-    }
+    },
+    fontSize:60,
+    fontColor:'#000'
   },
   mutations:{
+    setFontColor(state,color) {
+      state.fontColor = color
+    },
+    setFontSize(state,size) {
+      state.fontSize = size
+    },
     setCanvasRectWidth(state,width){
       state.canvasRect.width = width
     },

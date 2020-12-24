@@ -66,7 +66,7 @@ export class VirtualCanvas {
     this.boundPos = { top,left }
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
-    store.commit('setOperate','shezhi')
+    store.commit('setOperate','ziti')
     // store.commit('setShape','sibianxing')
     this.saveSnapshot()
     this.saveShapeImageData()
@@ -141,7 +141,9 @@ export class VirtualCanvas {
   }
   updateText() {
     const { x,y } = this.downPos
-    this.cloneCtx.font = "28px serif"
+    const { fontSize,fontColor } = store.state
+    this.cloneCtx.font = `${fontSize}px serif`
+    this.cloneCtx.fillStyle = fontColor;
     this.cloneCtx.fillText(store.state.keybord,x,y)
     this.update()
     this.saveSnapshot()

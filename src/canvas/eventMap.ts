@@ -91,11 +91,18 @@ export const move = {
     this.cloneCtx.stroke()
     this.updateCanvas()
   },
-  'hengxian'(this:VirtualCanvas,e:MouseEvent){
+  async 'hengxian'(this:VirtualCanvas,e:MouseEvent){
     this.applySnapshot()
     this.cloneCtx.beginPath()
     const { x, y } = this.downPos
     const { x:x1, y:y1 } = this.ctxPos
+    const lineColor = store.state.lineColor
+    if(/\#/g.test(lineColor)) { 
+      this.cloneCtx.strokeStyle = lineColor
+    }else{
+      const p = await createPattern(this.cloneCtx, 'images/'+ lineColor+'.png',40,40)
+      this.cloneCtx.strokeStyle = p
+    }
     this.cloneCtx.moveTo(x,y)
     this.cloneCtx.lineTo(x1,y1)
     this.cloneCtx.stroke()
