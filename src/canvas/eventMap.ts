@@ -110,13 +110,16 @@ export const move = {
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){
-      this.updateCtxPos(e)
-      const diffX = this.ctxPos.x - this.downPos.x;
-      const diffY = this.ctxPos.y - this.downPos.y
-      // 移动的那个图形
-      const shape = store.state.shape
-      this.applyShapeImageData()
-      setPath.call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
+      // 只有图形条件下才能移动
+      if(store.state.operate === 'tuxing'){
+        this.updateCtxPos(e)
+        const diffX = this.ctxPos.x - this.downPos.x;
+        const diffY = this.ctxPos.y - this.downPos.y
+        // 移动的那个图形
+        const shape = store.state.shape
+        this.applyShapeImageData()
+        setPath.call(this,store.state.shapePos.x + diffX,store.state.shapePos.y+diffY)
+      }
     },
     'nw-resize'(this:VirtualCanvas,e:MouseEvent){},
     'ne-resize'(this:VirtualCanvas,e:MouseEvent){
@@ -170,7 +173,9 @@ export const up = {
     
   },
   qingchu(this:VirtualCanvas){
+    // 清除鼠标
     this.applySnapshot()
+    this.update()
   },
   // 图形操作
   figure:{

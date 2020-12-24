@@ -32,6 +32,8 @@ export class VirtualCanvas {
     'se-resize':Path2D,
     'sw-resize':Path2D,
   }
+  // 存储栈列表
+  public stack :any[]= []
   constructor(canvas:HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D
@@ -76,7 +78,8 @@ export class VirtualCanvas {
     })
     document.addEventListener('keydown',(e:KeyboardEvent) =>{
       // 只有输入状态下
-      if(store.state.isInput && !store.state.shape){
+      // store.state.operate === 'ziti' store.state.isInput store
+      if( store.state.operate === 'ziti'){
         store.commit('setCursor',false)
         
         if(e.key === 'Backspace'){
@@ -91,6 +94,32 @@ export class VirtualCanvas {
         this.updateText()
       }
     })
+  }
+  back() {
+    const len = this.stack.length
+    if(len === 0) {
+      return 
+    }
+    const {head} = store.state
+    const index = len-1-head
+    if( index>=0) {
+      this.cloneCtx.putImageData(this.stack[index],0,0)
+      store.commit('setHead',store.state.head + 1)
+      this.update()
+    }
+  }
+  forward(){
+    const len = this.stack.length
+    if(len === 0) {
+      return 
+    }
+    const {head} = store.state
+    const index = len-head + 1
+    if(index >=0) {
+      this.cloneCtx.putImageData(this.stack[index],0,0)
+      store.commit('setHead',store.state.head - 1)
+      this.update()
+    }
   }
   saveShapeImageData() {
     this.shapeData = this.cloneCtx.getImageData(0,0,this.width,this.height)
@@ -122,6 +151,10 @@ export class VirtualCanvas {
   }
   saveSnapshot() {
     this.imageData  = this.cloneCtx.getImageData(0,0,this.width,this.height)
+    if(this.stack.length >=10) {
+      this.stack.splice(0,1)
+    }
+    this.stack.push(this.imageData)
   }
   applySnapshot() {
     this.cloneCtx.putImageData(this.imageData,0,0)

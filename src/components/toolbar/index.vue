@@ -20,10 +20,22 @@
     computed:{
       curIcon() {
         return this.$store.state.operate
+      },
+      head() {
+        return this.$store.state.head
       }
     },
     methods: {
       onIconClick(val) {
+        switch (val) {
+          case 'left-copy':
+            this.$instance.back()
+            break;
+          case 'right':
+            this.$instance.forward()
+          default:
+            break;
+        }
         this.$store.commit('setOperate',val)
       }
     }

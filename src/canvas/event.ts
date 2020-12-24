@@ -19,7 +19,7 @@ export function mousemove(this:VirtualCanvas,e:MouseEvent){
     const {operate,direction}  = store.state
     this.updateCtxPos(e)
     move[operate].call(this,e)
-    if(store.state.shape) {
+    if(store.getters.isMoveShape) {
       move.figure[direction].call(this,e)
     }
   }
@@ -27,7 +27,7 @@ export function mousemove(this:VirtualCanvas,e:MouseEvent){
 export function mouseup(this:VirtualCanvas,e:MouseEvent){
   this.isStart = false
   const {operate,direction}  = store.state
-  if(store.state.shape) {
+  if(store.getters.isMoveShape) {
     up.figure[direction].call(this,e)
   }else{
     up[operate].call(this)
