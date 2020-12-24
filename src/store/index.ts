@@ -11,7 +11,7 @@ let direction!: Direction
 export default new Vuex.Store({
   state:{
     operate,
-    lineWidth:1,
+    lineWidth:2,
     bgColor:'#fff',
     isCusor:false,
     keybord:'',

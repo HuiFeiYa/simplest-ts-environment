@@ -92,6 +92,9 @@
     methods: {
       onIconClick() {
         this.isOpen = !this.isOpen
+        if(!this.isOpen) {
+          this.$store.commit('setCanvasRectHeight',this.width)
+        }
       },
       onBgPatternClick(val) {
         this.$store.commit('setBgColor',val)

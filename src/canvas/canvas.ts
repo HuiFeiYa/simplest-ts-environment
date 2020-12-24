@@ -1,6 +1,7 @@
 import store from '../store/index'
 import { mousedown, mouseup, mousemove,drawShape } from './event';
 import { createPattern } from './pattern'
+import { download } from './element'
 export class VirtualCanvas {
   public canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
@@ -121,6 +122,10 @@ export class VirtualCanvas {
       store.commit('setHead',store.state.head - 1)
       this.update()
     }
+  }
+  download(w:number,h:number,type:string,name:string='下载') {
+    const { width, height } = store.state.canvasRect
+    download(this.canvas,w||width,h||height,type,name)
   }
   saveShapeImageData() {
     this.shapeData = this.cloneCtx.getImageData(0,0,this.width,this.height)

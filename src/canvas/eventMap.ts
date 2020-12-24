@@ -72,6 +72,7 @@ export const down = {
   right(this:VirtualCanvas,e:MouseEvent){},
   daoru(this:VirtualCanvas,e:MouseEvent){},
   daochu(this:VirtualCanvas,e:MouseEvent){},
+  shanchu(this:VirtualCanvas,e:MouseEvent){},
   
 }
 export const move = {
@@ -118,6 +119,7 @@ export const move = {
   right(this:VirtualCanvas,e:MouseEvent){},
   daoru(this:VirtualCanvas,e:MouseEvent){},
   daochu(this:VirtualCanvas,e:MouseEvent){},
+  shanchu(this:VirtualCanvas,e:MouseEvent){},
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){
@@ -193,6 +195,7 @@ export const up = {
   right(this:VirtualCanvas,e:MouseEvent){},
   daoru(this:VirtualCanvas,e:MouseEvent){},
   daochu(this:VirtualCanvas,e:MouseEvent){},
+  shanchu(this:VirtualCanvas,e:MouseEvent){},
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){
