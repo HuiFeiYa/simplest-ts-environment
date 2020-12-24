@@ -26,12 +26,13 @@
         <el-button type="primary" @click="onSureClick">确 定</el-button>
       </span>
     </el-dialog>
-
+    <input style="display:none" ref="input" type="file" @change="onInputChange">
   </div>
 </template>
 
 <script>
   import { iconList } from './config'
+  import { blobToImg } from '../../canvas/element'
   export default {
     name: '',
 
@@ -61,22 +62,38 @@
       },
       canvasRect() {
         return this.$store.state.canvasRect
+      },
+      importImageWidth() {
+        return this.$store.state.imageWidth
       }
     },
     methods: {
+      async onInputChange(e){
+        const file = e.srcElement.files[0]
+        const img = await blobToImg(file)
+        this.$instance.importImg(img,this.importImageWidth)
+        this.$instance.drawImageControl()
+      },
       onIconClick(val) {
+        this.$store.commit('setOperate',val)
         switch (val) {
           case 'left-copy':
             this.$instance.back()
             break;
           case 'right':
             this.$instance.forward()
+            break
           case 'daochu':
             this.centerDialogVisible = true
+            break;
+          case 'shanchu':
+            this.$instance.clear()
+            break
+          case 'daoru':
+            this.$refs.input.click()
           default:
             break;
         }
-        this.$store.commit('setOperate',val)
       },
       onSureClick() {
         this.centerDialogVisible = false

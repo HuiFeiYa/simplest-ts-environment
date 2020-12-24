@@ -34,6 +34,15 @@ export class VirtualCanvas {
     'se-resize':Path2D,
     'sw-resize':Path2D,
   }
+  public imagePath !: {
+    move:any,
+    'nw-resize':any,
+    'ne-resize':any,
+    'se-resize':any,
+    'sw-resize':any,
+  }
+  public image!:HTMLImageElement
+
   // 存储栈列表
   public stack :any[]= []
   constructor(canvas:HTMLCanvasElement) {
@@ -66,7 +75,7 @@ export class VirtualCanvas {
     this.boundPos = { top,left }
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
-    store.commit('setOperate','ziti')
+    store.commit('setOperate','tuxing')
     // store.commit('setShape','sibianxing')
     this.saveSnapshot()
     this.saveShapeImageData()
@@ -76,7 +85,6 @@ export class VirtualCanvas {
         store.commit('setCursor',false)
       }
       store.commit('clearKey')
-      this.canvas.style.cursor = 'default'
     })
     document.addEventListener('keydown',(e:KeyboardEvent) =>{
       // 只有输入状态下
@@ -96,6 +104,56 @@ export class VirtualCanvas {
         this.updateText()
       }
     })
+  }
+  importImg(img:HTMLImageElement,width:number) {
+    // 保存导入图片前的 canvas 画面
+    this.saveSnapshot()
+    const rate = img.width / img.height
+    const height = width / rate
+    const sx = this.width/2 - width/2
+    const sy = this.height/2 - height/2
+    // 保存图片的起点位置
+    store.commit('setImagePos',{x:sx,y:sy})
+    store.commit('setImageHeight',height)
+    this.image = img
+    this.cloneCtx.drawImage(img,sx,sy,width,height)
+    this.update()
+  }
+  // 绘制图片的控制框
+  drawImageControl() {
+    const cw = 20
+    const ch = 20
+    const p1 = new Path2D()
+    const p2 = new Path2D()
+    const p3 = new Path2D()
+    const p4 = new Path2D()
+    const p5 = new Path2D()
+    const{imagePos: {x,y},imageWidth:w,imageHeight:h} = store.state
+    p1.rect(x-cw/2,y-ch/2,cw,ch)
+    p2.rect(x+w-cw/2,y-ch/2,cw,ch)
+    p3.rect(x+w-cw/2,y+h-ch/2,cw,ch)
+    p4.rect(x-cw/2,y+h-ch/2,cw,ch)
+    p5.rect(x,y,w,h)
+    this.cloneCtx.strokeStyle = 'blue'
+    this.cloneCtx.stroke(p1)
+    this.cloneCtx.stroke(p2)
+    this.cloneCtx.stroke(p3)
+    this.cloneCtx.stroke(p4)
+    this.cloneCtx.stroke(p5)
+    this.update()
+    this.imagePath = {
+       move:p5,
+      'nw-resize':p1,
+      'ne-resize':p2,
+      'se-resize':p3,
+      'sw-resize':p4,
+    }
+  }
+  clear() {
+    this.cloneCtx.clearRect(0,0,this.width,this.height)
+    this.update()
+    this.saveSnapshot()
+    this.saveShapeImageData()
   }
   back() {
     const len = this.stack.length

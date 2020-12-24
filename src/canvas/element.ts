@@ -95,3 +95,18 @@ export function download(canvas:HTMLCanvasElement,width:number,height:number,ima
   let dataUrl = getDataURL(canvas,fixType(imageType),width,height)
   saveFile(dataUrl,imageType,fileName)
 }
+
+export function blobToImg (blob:Blob,width:number) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader()
+    reader.addEventListener('load', () => {
+      let img = new Image()
+      img.src = reader.result as string
+      img.addEventListener('load', () => {
+          resolve(img)
+        }
+      )
+    })
+    reader.readAsDataURL(blob)
+  })
+}

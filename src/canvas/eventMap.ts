@@ -71,7 +71,29 @@ export const down = {
   shezhi(this:VirtualCanvas,e:MouseEvent){},
   'left-copy'(this:VirtualCanvas,e:MouseEvent){},
   right(this:VirtualCanvas,e:MouseEvent){},
-  daoru(this:VirtualCanvas,e:MouseEvent){},
+  daoru(this:VirtualCanvas,e:MouseEvent){
+    const { x,y } = this.pos(e)
+    const { imageWidth } = store.state
+    for(let path of Object.entries(this.imagePath)) {
+      const [key,value] = path;
+      // 判断图形时候是否点击到对应的 path
+      // @ts-ignore
+      if(store.state.operate === 'daoru' && this.cloneCtx.isPointInPath(value,x,y)){
+        this.canvas.style.cursor = key
+        store.commit('setDirection',key)
+        return 
+      }
+      
+    }
+    // 如果没有选中其中任何一个 path，将 canvas 置为未选中
+    this.canvas.style.cursor = 'default'
+    // 重置画板
+    this.applySnapshot()
+    // 然后在绘制图形
+    this.importImg(this.image,imageWidth)
+    this.update()
+    console.log('未选中图片')
+  },
   daochu(this:VirtualCanvas,e:MouseEvent){},
   shanchu(this:VirtualCanvas,e:MouseEvent){},
   
@@ -223,10 +245,7 @@ export const up = {
     },
     'nw-resize'(this:VirtualCanvas,e:MouseEvent){},
     'ne-resize'(this:VirtualCanvas,e:MouseEvent){
-      // this.applyShapeImageData()
-      // changeSide.call(this)
       this.saveShapeImageData()
-      // this.saveSnapshot()
     },
     'se-resize'(this:VirtualCanvas,e:MouseEvent){},
     'sw-resize'(this:VirtualCanvas,e:MouseEvent){},
@@ -239,12 +258,12 @@ export const shapeEvent = {
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.beginPath()
     this.cloneCtx.lineWidth = 2
-    this.cloneCtx.moveTo(cX - side/(2*Math.tan(Math.PI/3)),cY-side/2)
-    this.cloneCtx.lineTo(cX + side * Math.cos(Math.PI/6),cY-side/2)
-    this.cloneCtx.lineTo(cX+ side * Math.cos(Math.PI/6) - side / 2,cY+side/2)
-    this.cloneCtx.lineTo(cX - side/(2*Math.tan(Math.PI/3))-side/2,cY+side/2)
-    this.cloneCtx.closePath()
-    this.cloneCtx.stroke()
+    path.moveTo(cX - side/(2*Math.tan(Math.PI/3)),cY-side/2)
+    path.lineTo(cX + side * Math.cos(Math.PI/6),cY-side/2)
+    path.lineTo(cX+ side * Math.cos(Math.PI/6) - side / 2,cY+side/2)
+    path.lineTo(cX - side/(2*Math.tan(Math.PI/3))-side/2,cY+side/2)
+    path.closePath()
+    this.cloneCtx.stroke(path)
     this.update()
     return path
   },
@@ -263,11 +282,11 @@ export const shapeEvent = {
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.beginPath()
     this.cloneCtx.lineWidth = 2 
-    this.cloneCtx.moveTo(cX,cY-side)
-    this.cloneCtx.lineTo(cX+Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
-    this.cloneCtx.lineTo(cX-Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
-    this.cloneCtx.closePath()
-    this.cloneCtx.stroke()
+    path.moveTo(cX,cY-side)
+    path.lineTo(cX+Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
+    path.lineTo(cX-Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
+    path.closePath()
+    this.cloneCtx.stroke(path)
     this.update()
     return path
   }

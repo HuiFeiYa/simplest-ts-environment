@@ -31,9 +31,21 @@ export default new Vuex.Store({
       height:600
     },
     fontSize:60,
-    fontColor:'#000'
+    fontColor:'#000',
+    imagePos:{
+      x:0,
+      y:0
+    },
+    imageWidth:300,
+    imageHeight:0
   },
   mutations:{
+    setImageHeight(state,height){
+      state.imageHeight = height
+    },
+    setImagePos(state,pos) {
+      state.imagePos = pos
+    },
     setFontColor(state,color) {
       state.fontColor = color
     },
