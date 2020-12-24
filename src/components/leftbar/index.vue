@@ -13,7 +13,10 @@
       </template>
       <template v-if="isShowHengxian || isShowQianbi">
         <h4>线宽</h4>
-        <el-input-number v-model="lineWidth" :min="1" :max="10" label="描述文字"></el-input-number>
+        <el-input-number v-model="lineWidth" :min="1" :max="40" label="描述文字"></el-input-number>
+        <h4>画笔颜色选择</h4>
+        <el-color-picker v-model="lineColor"></el-color-picker>
+        <Icon @click="onLinePatternClick"></Icon>
       </template>
     </div>
   </div>
@@ -80,6 +83,14 @@
           this.$store.commit('setLineWidth',value)
         }
       },
+      lineColor:{
+        get() {
+          return this.$store.state.lineColor
+        },
+        set(val) {
+          this.$store.commit('setLineColor',val)
+        }
+      },
       bgColor:{
         get() {
           return this.$store.state.bgColor
@@ -90,6 +101,9 @@
       }
     },
     methods: {
+      onLinePatternClick(val) {
+        this.$store.commit('setLineColor',val)
+      },
       onIconClick() {
         this.isOpen = !this.isOpen
         if(!this.isOpen) {

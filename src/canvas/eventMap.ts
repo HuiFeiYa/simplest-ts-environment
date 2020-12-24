@@ -1,6 +1,7 @@
 import { VirtualCanvas } from './canvas';
 import { setPath } from './event'
 import store from '../store'
+import { createPattern } from './pattern'
 const cursor = {
   height:25,
   width:2
@@ -76,8 +77,16 @@ export const down = {
   
 }
 export const move = {
-  'qianbi'(this:VirtualCanvas,e:MouseEvent){
+  async 'qianbi'(this:VirtualCanvas,e:MouseEvent){
     const { x, y } = this.ctxPos
+    const lineColor = store.state.lineColor
+    if(/\#/g.test(lineColor)) { 
+      this.cloneCtx.strokeStyle = lineColor
+    }else{
+      const p = await createPattern(this.cloneCtx, 'images/'+ lineColor+'.png',40,40)
+      this.cloneCtx.strokeStyle = p
+    }
+      
     this.cloneCtx.lineTo(x,y)
     this.cloneCtx.stroke()
     this.updateCanvas()

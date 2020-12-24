@@ -13,6 +13,7 @@ export default new Vuex.Store({
     operate,
     lineWidth:2,
     bgColor:'#fff',
+    lineColor:'#000',
     isCusor:false,
     keybord:'',
     isInput:true,
@@ -42,6 +43,9 @@ export default new Vuex.Store({
     },
     setLineWidth(state,width:number) {
       state.lineWidth = width
+    },
+    setLineColor(state,color) {
+      state.lineColor = color
     },
     setBgColor(state,color:string){
       state.bgColor = color

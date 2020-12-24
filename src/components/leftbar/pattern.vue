@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img class="icon" v-for="path in list" :key="path" :src="'/images/'+path+'.png'" alt="" @click="onClick(path)">
+    <img class="icon" v-for="(path,index) in list" :key="path" :src="'/images/'+path+'.png'" alt="" :class="{select:index === selectIndex}" @click="onClick(path,index)">
   </div>
 </template>
 
@@ -12,13 +12,15 @@
       return {
         list:[
           'gongji','nainiu','niu','tuzi','yang'
-        ]
+        ],
+        selectIndex:-1
       }
     },
 
     methods: {
-      onClick(path){
+      onClick(path,index){
         this.$emit('click',path)
+        this.selectIndex = index
       }
     }
   }
@@ -26,7 +28,11 @@
 
 <style lang='less' scoped>
 .icon{
-  width:60px;
-  height: 60px;
+  width:50px;
+  height: 50px;
+  border:1px solid transparent;
+}
+.select{
+  border:1px solid orange;
 }
 </style>
