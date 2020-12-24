@@ -1,5 +1,6 @@
 import store from '../store/index'
 import { mousedown, mouseup, mousemove,drawShape } from './event';
+import { createPattern } from './pattern'
 export class VirtualCanvas {
   public canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
@@ -64,7 +65,7 @@ export class VirtualCanvas {
     this.boundPos = { top,left }
     // 默认为铅笔状态
     // store.commit('setOperate','qianbi')
-    store.commit('setOperate','tuxing')
+    store.commit('setOperate','shezhi')
     // store.commit('setShape','sibianxing')
     this.saveSnapshot()
     this.saveShapeImageData()
@@ -115,7 +116,7 @@ export class VirtualCanvas {
     }
     const {head} = store.state
     const index = len-head + 1
-    if(index >=0) {
+    if(index >=0 && index < len) {
       this.cloneCtx.putImageData(this.stack[index],0,0)
       store.commit('setHead',store.state.head - 1)
       this.update()
@@ -175,7 +176,8 @@ export class VirtualCanvas {
   updateMousedownPos(e:MouseEvent) {
     this.downPos = this.pos(e)
   }
-  update() {
+  async update(isPattern?:boolean) {
+    const { pattern,bgColor } = store.state
     // 将之前的 ctx 状态存储到栈中
     this.ctx.save()
     // 清除展示画板的内容
@@ -183,7 +185,12 @@ export class VirtualCanvas {
     this.updateCanvas()
     // 绘制背景的时候改为,在现有画布内容后面绘制新的图形
     this.ctx.globalCompositeOperation = 'destination-over'
-    this.ctx.fillStyle = store.state.bgColor
+    if(isPattern) { 
+       const p = await createPattern(this.cloneCtx, 'images/'+ pattern+'.png',40,40)
+       this.ctx.fillStyle = p
+    }else{
+      this.ctx.fillStyle = bgColor
+    }
     this.ctx.fillRect(0,0,this.width,this.height)
     this.ctx.restore()
   }

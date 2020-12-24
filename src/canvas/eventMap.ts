@@ -66,7 +66,13 @@ export const down = {
     this.update()
     console.log('未选中')
   },
-  qingchu(this:VirtualCanvas,e:MouseEvent){}
+  qingchu(this:VirtualCanvas,e:MouseEvent){},
+  shezhi(this:VirtualCanvas,e:MouseEvent){},
+  'left-copy'(this:VirtualCanvas,e:MouseEvent){},
+  right(this:VirtualCanvas,e:MouseEvent){},
+  daoru(this:VirtualCanvas,e:MouseEvent){},
+  daochu(this:VirtualCanvas,e:MouseEvent){},
+  
 }
 export const move = {
   'qianbi'(this:VirtualCanvas,e:MouseEvent){
@@ -107,6 +113,11 @@ export const move = {
     this.cloneCtx.restore()
     // this.update()
   },
+  shezhi(this:VirtualCanvas,e:MouseEvent){},
+  'left-copy'(this:VirtualCanvas,e:MouseEvent){},
+  right(this:VirtualCanvas,e:MouseEvent){},
+  daoru(this:VirtualCanvas,e:MouseEvent){},
+  daochu(this:VirtualCanvas,e:MouseEvent){},
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){
@@ -177,6 +188,11 @@ export const up = {
     this.applySnapshot()
     this.update()
   },
+  shezhi(this:VirtualCanvas,e:MouseEvent){},
+  'left-copy'(this:VirtualCanvas,e:MouseEvent){},
+  right(this:VirtualCanvas,e:MouseEvent){},
+  daoru(this:VirtualCanvas,e:MouseEvent){},
+  daochu(this:VirtualCanvas,e:MouseEvent){},
   // 图形操作
   figure:{
     'move'(this:VirtualCanvas,e:MouseEvent){

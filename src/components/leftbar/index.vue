@@ -1,23 +1,31 @@
 <template>
   <div class="leftbar bg-theme hp100">
     <div class="content">
-      <div class="flex align-center">
-        <el-input v-model="width" placeholder="宽"></el-input>
-        <svg-icon style="font-size:20px" :icon-class="lock"></svg-icon>
-        <el-input v-model="height" placeholder="高"></el-input>
-      </div>
-      <h4>背景颜色选择</h4>
-      <el-color-picker v-model="bgColor" @change="onColorPickerInput"></el-color-picker>
-      <h4>线宽</h4>
-      <el-input-number v-model="lineWidth" :min="1" :max="10" label="描述文字"></el-input-number>
+      <template v-if="isShowConfig">
+        <div class="flex align-center">
+          <el-input v-model="width" placeholder="宽"></el-input>
+          <svg-icon style="font-size:20px" :icon-class="lock"></svg-icon>
+          <el-input v-model="height" placeholder="高"></el-input>
+        </div>
+        <h4>背景颜色选择</h4>
+        <el-color-picker v-model="bgColor" @change="onColorPickerInput"></el-color-picker>
+        <Icon @click="onBgPatternClick"></Icon>
+      </template>
+      <template v-if="isShowHengxian || isShowQianbi">
+        <h4>线宽</h4>
+        <el-input-number v-model="lineWidth" :min="1" :max="10" label="描述文字"></el-input-number>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+  import Icon from './pattern.vue'
   export default {
     name: '',
-
+    components:{
+      Icon
+    },
     data() {
       return {
         // 画板尺寸
@@ -29,6 +37,21 @@
       }
     },
     computed:{
+      operate() {
+        return this.$store.state.operate
+      },
+      isShowConfig() {
+        return this.operate === 'shezhi'
+      },
+      isShowQianbi(){
+        return this.operate === 'qianbi'
+      },
+      isShowHengxian() {
+        return this.operate === 'hengxian'
+      },
+      isShow() {
+        return this.isShowConfig || this.isShowQianbi || this.isShowHengxian
+      },
       lock() {
         return this.isOpen ? 'kaisuo' : 'suo'
       },
@@ -50,6 +73,10 @@
       }
     },
     methods: {
+      onBgPatternClick(val) {
+        this.$store.commit('setPattern',val)
+        this.$instance.update(true)
+      },
       onColorPickerInput() {
         if(this.$instance) {
           this.$instance.update()

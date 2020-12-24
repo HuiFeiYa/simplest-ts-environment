@@ -23,7 +23,8 @@ export default new Vuex.Store({
       y:0,
       side:100
     },
-    head:1
+    head:1,
+    pattern:''
   },
   mutations:{
     setOperate(state,type:IconType) {
@@ -62,6 +63,9 @@ export default new Vuex.Store({
     },
     setHead(state,val){
       state.head = val
+    },
+    setPattern(state,val) {
+      state.pattern = val
     }
   },
   getters:{
