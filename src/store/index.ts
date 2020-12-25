@@ -27,8 +27,8 @@ export default new Vuex.Store({
     head:1,
     pattern:'',
     canvasRect:{
-      width:600,
-      height:600
+      width:300,
+      height:300
     },
     fontSize:60,
     fontColor:'#000',
@@ -36,10 +36,13 @@ export default new Vuex.Store({
       x:0,
       y:0
     },
-    imageWidth:300,
+    imageWidth:100,
     imageHeight:0
   },
   mutations:{
+    setImageWidth(state,width){
+      state.imageWidth = width
+    },
     setImageHeight(state,height){
       state.imageHeight = height
     },

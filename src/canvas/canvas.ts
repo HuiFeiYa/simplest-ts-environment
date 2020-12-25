@@ -40,6 +40,10 @@ export class VirtualCanvas {
     'ne-resize':any,
     'se-resize':any,
     'sw-resize':any,
+    'n-resize':any,
+    'w-resize':any,
+    's-resize':any,
+    'e-resize':any,
   }
   public image!:HTMLImageElement
 
@@ -133,25 +137,44 @@ export class VirtualCanvas {
     const p3 = new Path2D()
     const p4 = new Path2D()
     const p5 = new Path2D()
+    const p6 = new Path2D()
+    const p7 = new Path2D()
+    const p8 = new Path2D()
+    const p9 = new Path2D()
     const{imagePos: {x,y},imageWidth:w,imageHeight:h} = store.state
+    // 四条边的中心点
     p1.rect(x-cw/2+w/2,y-ch/2,cw,ch)
     p2.rect(x+w-cw/2,y-ch/2+h/2,cw,ch)
     p3.rect(x+w-cw/2-w/2,y+h-ch/2,cw,ch)
     p4.rect(x-cw/2,y+h-ch/2-h/2,cw,ch)
+    // 中间的框
     p5.rect(x,y,w,h)
+    // 四个角
+    p6.rect(x-cw/2,y-ch/2,cw,ch)
+    p7.rect(x+w-cw/2,y-ch/2,cw,ch)
+    p8.rect(x+w-cw/2,y+h-ch/2,cw,ch)
+    p9.rect(x-cw/2,y+h-ch/2,cw,ch)
     this.cloneCtx.strokeStyle = 'blue'
     this.cloneCtx.stroke(p1)
     this.cloneCtx.stroke(p2)
     this.cloneCtx.stroke(p3)
     this.cloneCtx.stroke(p4)
     this.cloneCtx.stroke(p5)
+    this.cloneCtx.stroke(p6)
+    this.cloneCtx.stroke(p7)
+    this.cloneCtx.stroke(p8)
+    this.cloneCtx.stroke(p9)
     this.update()
     this.imagePath = {
        move:p5,
-      'nw-resize':p1,
-      'ne-resize':p2,
-      'se-resize':p3,
-      'sw-resize':p4,
+      'nw-resize':p6,
+      'ne-resize':p7,
+      'se-resize':p8,
+      'sw-resize':p9,
+      'n-resize':p1,
+      'e-resize':p2,
+      's-resize':p3,
+      'w-resize':p4,
     }
   }
   clear() {
