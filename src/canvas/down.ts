@@ -87,14 +87,19 @@ export default {
   right(this:VirtualCanvas,e:MouseEvent){},
   daoru(this:VirtualCanvas,e:MouseEvent){
     const { x,y } = this.pos(e)
-    const { imageWidth } = store.state
+    const { imageWidth,isShowControl } = store.state
     for(let path of Object.entries(this.imagePath)) {
       const [key,value] = path;
       // 判断图形时候是否点击到对应的 path
       // @ts-ignore
       if(store.state.operate === 'daoru' && this.cloneCtx.isPointInPath(value,x,y)){
+        // 未显示控制的时候点击命中 path 就显示控制框
+        if(!isShowControl) {
+          this.drawImageControl()
+        }
         this.canvas.style.cursor = key
         store.commit('setDirection',key)
+        store.commit('setIsShowControl',true)
         return 
       }
       
@@ -106,6 +111,7 @@ export default {
     // 然后在绘制图形
     this.reDrawImage()
     this.update()
+    store.commit('setIsShowControl',false)
     console.log('未选中图片')
   },
   daochu(this:VirtualCanvas,e:MouseEvent){},

@@ -3,18 +3,20 @@ import store from '../store/index'
 export default {
   // 更新的是图片的起点位置
   move(this:VirtualCanvas,e:MouseEvent) {
-    const { x,y } = store.state.imagePos
-    this.updateCtxPos(e)
-    const diffX = this.ctxPos.x - this.downPos.x;
-    const diffY = this.ctxPos.y - this.downPos.y
-    this.applySnapshot()
-    store.commit('setImagePos',{x:x+diffX,y:y+diffY})
-    this.reDrawImage()
-    this.update()
-    // 重新更新老的位置
-    this.updateMousedownPos(e)
-    // 绘制控制框之前将 canvas 画板保存
-    this.drawImageControl()
+    if(store.state.isShowControl) {
+      const { x,y } = store.state.imagePos
+      this.updateCtxPos(e)
+      const diffX = this.ctxPos.x - this.downPos.x;
+      const diffY = this.ctxPos.y - this.downPos.y
+      this.applySnapshot()
+      store.commit('setImagePos',{x:x+diffX,y:y+diffY})
+      this.reDrawImage()
+      this.update()
+      // 重新更新老的位置
+      this.updateMousedownPos(e)
+      // 绘制控制框之前将 canvas 画板保存
+      this.drawImageControl()
+    }
   },
   // 更新宽高，其实位置的xy
   'nw-resize'(this:VirtualCanvas,e:MouseEvent){

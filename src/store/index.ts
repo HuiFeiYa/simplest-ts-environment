@@ -37,9 +37,13 @@ export default new Vuex.Store({
       y:0
     },
     imageWidth:100,
-    imageHeight:0
+    imageHeight:0,
+    isShowControl:false
   },
   mutations:{
+    setIsShowControl(state,val) {
+      state.isShowControl = val
+    },
     setImageWidth(state,width){
       state.imageWidth = width
     },

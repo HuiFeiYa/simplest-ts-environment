@@ -13,6 +13,7 @@ export const shapeEvent = {
     const path = new Path2D()
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.beginPath()
+    this.cloneCtx.save()
     this.cloneCtx.lineWidth = 2
     path.moveTo(cX - side/(2*Math.tan(Math.PI/3)),cY-side/2)
     path.lineTo(cX + side * Math.cos(Math.PI/6),cY-side/2)
@@ -21,22 +22,26 @@ export const shapeEvent = {
     path.closePath()
     this.cloneCtx.stroke(path)
     this.update()
+    this.cloneCtx.restore()
     return path
   },
   sibianxing1(this:VirtualCanvas,cX:number,cY:number,side:number=defaultSide) {
     this.cloneCtx.beginPath()
     const path = new Path2D()
+    this.cloneCtx.save()
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.lineWidth = 2
     path.rect(cX-side/2,cY-side/2,side,side)
     this.cloneCtx.stroke(path)
     this.update()
+    this.cloneCtx.restore()
     return path
   },
   sanjiaoxing(this:VirtualCanvas,cX:number,cY:number,side:number=defaultSide){
     const path = new Path2D()
     this.cloneCtx.strokeStyle = '#000'
     this.cloneCtx.beginPath()
+    this.cloneCtx.save()
     this.cloneCtx.lineWidth = 2 
     path.moveTo(cX,cY-side)
     path.lineTo(cX+Math.cos(Math.PI/6)*side,cY + Math.sin(Math.PI/6)*side)
@@ -44,6 +49,7 @@ export const shapeEvent = {
     path.closePath()
     this.cloneCtx.stroke(path)
     this.update()
+    this.cloneCtx.restore()
     return path
   }
 }

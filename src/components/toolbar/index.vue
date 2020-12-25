@@ -73,6 +73,8 @@
         const img = await blobToImg(file)
         this.$instance.importImg(img,this.importImageWidth)
         this.$instance.drawImageControl()
+        // 当前显示 control 控制框
+        this.$store.commit('setIsShowControl',true)
       },
       onIconClick(val) {
         this.$store.commit('setOperate',val)

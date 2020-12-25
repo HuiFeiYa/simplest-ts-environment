@@ -78,15 +78,21 @@ export class VirtualCanvas {
     // 更新画板的位置
     this.boundPos = { top,left }
     // 默认为铅笔状态
-    // store.commit('setOperate','qianbi')
-    store.commit('setOperate','tuxing')
-    // store.commit('setShape','sibianxing')
+    store.commit('setOperate','shezhi')
     this.saveSnapshot()
     this.saveShapeImageData()
     // 监听全局的点击事件
     window.addEventListener('click',(e)=>{
       if(e.target !== this.canvas){
         store.commit('setCursor',false)
+        // 点击非 canvas 区域，取消选中的控制框,这里不能结构赋值出来要用引用类型
+        if(store.state.isShowControl) {
+          store.commit('setIsShowControl',false)
+          this.applySnapshot()
+          this.reDrawImage()
+          this.update()
+          this.saveSnapshot()
+        }
       }
       store.commit('clearKey')
     })
@@ -95,7 +101,6 @@ export class VirtualCanvas {
       // store.state.operate === 'ziti' store.state.isInput store
       if( store.state.operate === 'ziti'){
         store.commit('setCursor',false)
-        
         if(e.key === 'Backspace'){
           store.commit('deleteOne')
           // 将写文案之前的像素更新进来

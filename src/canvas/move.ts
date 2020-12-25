@@ -16,6 +16,9 @@ export default  {
   async 'qianbi'(this:VirtualCanvas,e:MouseEvent){
     const { x, y } = this.ctxPos
     const lineColor = store.state.lineColor
+    this.cloneCtx.save()
+    this.cloneCtx.lineWidth = store.state.lineWidth
+
     if(/\#/g.test(lineColor)) { 
       this.cloneCtx.strokeStyle = lineColor
     }else{
@@ -26,10 +29,14 @@ export default  {
     this.cloneCtx.lineTo(x,y)
     this.cloneCtx.stroke()
     this.updateCanvas()
+    this.cloneCtx.restore()
   },
   async 'hengxian'(this:VirtualCanvas,e:MouseEvent){
     this.applySnapshot()
     this.cloneCtx.beginPath()
+    this.cloneCtx.save()
+    this.cloneCtx.lineWidth = store.state.lineWidth
+
     const { x, y } = this.downPos
     const { x:x1, y:y1 } = this.ctxPos
     const lineColor = store.state.lineColor
@@ -43,6 +50,7 @@ export default  {
     this.cloneCtx.lineTo(x1,y1)
     this.cloneCtx.stroke()
     this.update()
+    this.cloneCtx.restore()
   },
   'ziti'(this:VirtualCanvas,e:MouseEvent) {},
   tuxing(this:VirtualCanvas,e:MouseEvent){},

@@ -9,7 +9,6 @@ export function mousedown(this:VirtualCanvas,e:MouseEvent){
       down[operate].call(this,e)
       const { x, y } = this.ctxPos
       this.cloneCtx.beginPath()
-      this.cloneCtx.lineWidth = store.state.lineWidth
       this.cloneCtx.moveTo(x,y)
       // 标记是否开始绘画
       this.isStart = true
