@@ -2,6 +2,30 @@ import store from '../store/index'
 import { mousedown, mouseup, mousemove,drawShape } from './event';
 import { createPattern } from './pattern'
 import { download } from './element'
+import { autoWrapText } from './element'
+// @ts-ignore
+String.prototype.colorRgb = function(){
+  var sColor = this.toLowerCase();
+  //十六进制颜色值的正则表达式
+  var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+  // 如果是16进制颜色
+  if (sColor && reg.test(sColor)) {
+      if (sColor.length === 4) {
+          var sColorNew = "#";
+          for (var i=1; i<4; i+=1) {
+              sColorNew += sColor.slice(i, i+1).concat(sColor.slice(i, i+1));    
+          }
+          sColor = sColorNew;
+      }
+      //处理六位的颜色值
+      var sColorChange = [];
+      for (var i=1; i<7; i+=2) {
+          sColorChange.push(parseInt("0x"+sColor.slice(i, i+2)));    
+      }
+      return "RGB(" + sColorChange.join(",") + ")";
+  }
+  return sColor;
+};
 export class VirtualCanvas {
   public canvas !:HTMLCanvasElement;
   private ctx!:CanvasRenderingContext2D
@@ -230,12 +254,18 @@ export class VirtualCanvas {
   setPath(shapePath:any) {
     this.shapePath = shapePath
   }
-  updateText() {
+  async updateText() {
     const { x,y } = this.downPos
-    const { fontSize,fontColor } = store.state
-    this.cloneCtx.font = `${fontSize}px serif`
-    this.cloneCtx.fillStyle = fontColor;
-    this.cloneCtx.fillText(store.state.keybord,x,y)
+    const { fontSize,fontColor,keybord,textAvailaleWidth } = store.state
+    // const width = store.state.textAvailaleWidth
+    // `${fontSize}px serif`
+    console.log('keybord',keybord)
+    
+    const img = await autoWrapText(200,1000,keybord,`${fontSize}px serif`)
+    this.cloneCtx.drawImage(img,x,y)
+    // this.cloneCtx.font = `${fontSize}px serif`
+    // this.cloneCtx.fillStyle = fontColor;
+    // this.cloneCtx.fillText(store.state.keybord,x,y)
     this.update()
     this.saveSnapshot()
   }

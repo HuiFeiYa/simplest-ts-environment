@@ -20,7 +20,7 @@
       </template>
       <template v-if="isShowZiti">
         <h4>字体大小</h4>
-        <el-input-number v-model="fontSize"  label="描述文字"></el-input-number>
+        <el-input-number v-model="fontSize"  label="描述文字" ></el-input-number>
         <h4>字体颜色</h4>
         <el-color-picker v-model="fontColor"></el-color-picker>
       </template>
@@ -39,7 +39,7 @@
       return {
         isOpen:false,
         color:'',
-        isLoad:false
+        isLoad:false,
       }
     },
     computed:{
@@ -48,7 +48,7 @@
           return this.$store.state.fontColor
         },
         set(val) {
-          this.$store.commit('setFontColor',val)
+          this.$store.commit('setFontColor',val.colorRgb())
         }
       },
       fontSize:{

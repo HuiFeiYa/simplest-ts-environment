@@ -8,6 +8,22 @@
 
 > CanvasRenderingContext2D.getImageData() 返回一个 ImageData 对象，用来描述 canvas 区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为 sw、高为 sh。
 
+这个 api 返回一个 imageData 对象，相当于拿到一个 canvas 的快照，我们可以指定你要的快照的起点位置和大小，一般都是 canvas 的大小。
+
+### ctx.putImageData(imageData,dx,dy)
+
+> CanvasRenderingContext2D.putImageData() 是 Canvas 2D API 将数据从已有的 ImageData 对象绘制到位图的方法。 如果提供了一个绘制过的矩形，则只绘制该矩形的像素。此方法不受画布转换矩阵的影响。
+
+相当于我们把之前存储的快照(也就是 imageData) 重新绘制到 canvas 上
+
+### 撤销
+
+我们将绘制的 canvas 内容都保存一份 imageData (快照)也就得到 [imageData,imageData...] 列表，可以通过 head 来指定当前引用的是第几个快照，然后取出来应用到 canvas 上。
+
+### 前进
+
+同样在有了 [imageData,imageData...] 列表后，我们可以通过后移 head 来获取到当前前进后的快照。
+
 ## 更换背景
 
 ### ctx.fillStyle = color ctx.fill()填充颜色
@@ -52,7 +68,7 @@
         ctx.stroke()
     ```
 
-2. 背景层用于设置背景颜色，和绘制内容层
+    2. 背景层用于设置背景颜色，和绘制内容层
 
     ```
         const bgCanvas = document.getElementsByTagName('canvas')[0]
@@ -64,6 +80,14 @@
         // 将新内容绘制方式改为上方绘制
         ctx.globalCompositeOperation = 'source-over'
     ```
+
+### [ctx.drawImage()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
+
+> The CanvasRenderingContext2D.drawImage() method of the Canvas 2D API provides different ways to draw an image onto the canvas.
+
+将 image 绘制到 canvas 上。这里的 image 包括
+
+    -   HTMLImageElement 、HTMLCanvasElement 、SVGImageElement 、HTMLVideoElement 等
 
 ## 绘制直线和连续的线，他们的绘制区别
 
@@ -81,7 +105,7 @@
 2. mousemove 事件中每次滑动都会绘制和上次 mousemove 事件触发的点的连线。
 3. mouseup 一次完整的绘制结束
 
-### 绘制直线流程
+### 绘制直线流程(见案例)
 
 1. 在 mousedown 事件中确认鼠标落点位置
 2. 将绘制直线的画布内容重新渲染到 canvas 上,绘制落点位置到当前位置的线段
@@ -150,41 +174,100 @@
 2. 根据每个方向的规则去更新图片的(坐标、宽、高、角度)信息
 3. 将 imageData 重新绘制到 canvas 上，然后将当前图片信息(坐标、宽、高、角度)。绘制到 canvas 上
 
+## 橡皮擦的功能实现
+
+### 定义
+
+> CanvasRenderingContext2D.clip() 是 Canvas 2D API 将当前创建的路径设置为当前剪切路径的方法。
+
+    ```
+        ctx.beginPath()
+        // 绘制剪切路径
+        ctx.arc(x-left,y-top,R,0,Math.PI*2,false)
+        ctx.clip()
+        ctx.clearRect(0,0,canvas.width,canvas.height)
+    ```
+    剪切路径绘制以后是对之后的图形生效，如果图形绘制在 clip 之前，clip 对其没有影响。
+
+> In the image below, the red outline represents a clipping region shaped like a star. Only those parts of the checkerboard pattern that are within the clipping region get drawn.
+
+    ![](https://mdn.mozillademos.org/files/209/Canvas_clipping_path.png)
+
+    -   注意点 1: 剪切之后只能在剪切范围内继续绘制，也就是我们无法操作 clip 范围之外的区域
+
+> Be aware that the clipping region is only constructed from shapes added to the path. It doesn't work with shape primitives drawn directly to the canvas, such as fillRect(). Instead, you'd have to use rect() to add a rectangular shape to the path before calling clip().
+
+    * 注意点2 剪切必须有路径，例如使用 rect() arc() ... 这些创建路径的方法。使用 fillRect() 这类api并没有创建路径，所以剪切无效。
+
+### 实现橡皮擦
+
+    由于 clip 会创建一个新的 clipping region ,clip 之前创建的路径就是新的 clipping region ，默认当前 clip region 为 canvas 左上角。
+    这里介绍一下 [ctx.save()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save) 方法
+
+    > The CanvasRenderingContext2D.save() method of the Canvas 2D API saves the entire state of the canvas by pushing the current state onto a stack.
+
+    stack 存储了一下这些，其中就包括 clipping region 。
+    * The current transformation matrix.
+    * The current clipping region.
+    * The current dash list.
+    * The current values of the following attributes: strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, lineDashOffset, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation, font, textAlign, textBaseline, direction, imageSmoothingEnabled.
+
+    我们在 clip 之前将 clipping region 存储在 stack 中。当我们 clip 之后得到我们想要的图形，我们使用 [ctx.restore()](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore) 将存储的 state 都重新 restore 到canvas上。这样我们又可以操作 canvas 上所有的区域了。
+
+    > The CanvasRenderingContext2D.restore() method of the Canvas 2D API restores the most recently saved canvas state by popping the top entry in the drawing state stack. If there is no saved state, this method does nothing.
+    ```
+        canvas.onmousemove = function(e) {
+        const { clientX,clientY } = e
+        windowLocToCanvas(clientX,clientY)
+        }
+        function windowLocToCanvas(x,y) {
+        const { top,left } = canvas.getBoundingClientRect()
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(x-left,y-top,R,0,Math.PI*2,false)
+        ctx.clip()
+        ctx.clearRect(0,0,canvas.width,canvas.height)
+        ctx.restore()
+        }
+    ```
+
+## 如何添加文字和模拟光标
+
 ## 注意点
 
 ### stroke 影响
 
-```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <canvas width="500" height="500"></canvas>
-  <button>画一条 linewidth 为 10px 的线</button>
-  <script>
-    const canvas = document.getElementsByTagName('canvas')[0]
-    const ctx = canvas.getContext('2d')
-    const button = document.getElementsByTagName('button')[0]
-    ctx.beginPath()
-    ctx.lineWidth = 4
-    ctx.moveTo(100,100)
-    ctx.lineTo(200,100)
-    ctx.stroke()
+    ```
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    </head>
+    <body>
+    <canvas width="500" height="500"></canvas>
+    <button>画一条 linewidth 为 10px 的线</button>
+    <script>
+        const canvas = document.getElementsByTagName('canvas')[0]
+        const ctx = canvas.getContext('2d')
+        const button = document.getElementsByTagName('button')[0]
+        ctx.beginPath()
+        ctx.lineWidth = 4
+        ctx.moveTo(100,100)
+        ctx.lineTo(200,100)
+        ctx.stroke()
 
-    button.addEventListener('click',function(){
-      ctx.moveTo(100,200)
-      ctx.lineTo(200,200)
-      ctx.lineWidth = 10
-      ctx.stroke()
-    })
-  </script>
-</body>
-</html>
-```
+        button.addEventListener('click',function(){
+        ctx.moveTo(100,200)
+        ctx.lineTo(200,200)
+        ctx.lineWidth = 10
+        ctx.stroke()
+        })
+    </script>
+    </body>
+    </html>
+    ```
 
 描述: 后面绘制的 10px 的线条样式宽度后同时改变了之前绘制的 4px 的线条。什么原因？如何解决？
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas')
+    const ctx = canvas.getContext('2d')
+    const R = 20
+    // ctx.font = '50px serif'
+    // const text = 'Hello world 张三里斯王五，Hello world 张三里斯王五'
+    // const len = ctx.measureText(text)
+    // ctx.fillText(text,50,90)
+    // console.log('text',len)
+    function loadImg(path,width,height) {
+      return new Promise(res=>{
+        const img = new Image()
+        img.width = width 
+        img.height = height
+        img.onload = function () {
+          res(img)
+        }
+        img.src = path
+      })
+    }
+    async function autoWrapText(width,height,value,font="16px sans-serif"){
+      const path = 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><foreignObject width="'+ width +'" height="'+ height +'"><body xmlns="http://www.w3.org/1999/xhtml" style="margin:0;font:'+ font +';word-break: break-word;">'+value+'</body></foreignObject></svg>';
+      return  await loadImg(path,width,height)
+    }
+    async function draw() {
+      const value = 'canvas.ts:239 keybordsdfaCapsLockfasdfsadfadfasdfasdfasdflkjklajsdkfjlsjdlfkjlaksjdlfkjlkjljljlkjlsdfasdfalkjkljlasdfljlsljalsdj'
+      const img = await autoWrapText(100,100,value)
+      ctx.drawImage(img,0,0)
+    }
+    draw()
+    console.log('2')
+  </script>
+</body>
+</html>

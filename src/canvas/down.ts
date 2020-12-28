@@ -53,6 +53,12 @@ export default {
     this.updateMousedownPos(e)
   },
   ziti(this:VirtualCanvas,e:MouseEvent) {
+     // 更新鼠标位置
+     this.updateMousedownPos(e)
+     const { x,y } = this.downPos
+     const { width,height} = store.state.canvasRect
+     console.log('x,y',x,y)
+     store.commit('setTextAvailaleWidth',width - x)
     if(!hasSet) {
       // 当鼠标重新点击其他位置时候保存当前画板的内容。
       this.shapeData = this.cloneCtx.getImageData(0,0,this.width,this.height)

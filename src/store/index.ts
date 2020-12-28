@@ -30,17 +30,21 @@ export default new Vuex.Store({
       width:300,
       height:300
     },
-    fontSize:60,
-    fontColor:'#000',
+    fontSize:20,
+    fontColor:'rgba(0,0,0,0.8)',
     imagePos:{
       x:0,
       y:0
     },
     imageWidth:100,
     imageHeight:0,
-    isShowControl:false
+    isShowControl:false,
+    textAvailaleWidth:0
   },
   mutations:{
+    setTextAvailaleWidth(state,width) {
+      state.textAvailaleWidth = width
+    },
     setIsShowControl(state,val) {
       state.isShowControl = val
     },
@@ -54,6 +58,7 @@ export default new Vuex.Store({
       state.imagePos = pos
     },
     setFontColor(state,color) {
+      console.log('color',color)
       state.fontColor = color
     },
     setFontSize(state,size) {
