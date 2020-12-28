@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <canvas width="500" height="500"></canvas>
+  <script>
+    const canvas = document.getElementsByTagName('canvas')[0]
+    const ctx = canvas.getContext('2d')
+    const button = document.getElementsByTagName('button')[0]
+    let imageData 
+    let isDown = false
+    let pos = {
+      x:0,
+      y:0
+    }
+    saveSnapshot()
+    function saveSnapshot() {
+      imageData = ctx.getImageData(0,0,canvas.width,canvas.height)
+    }
+    function applySnapshot() {
+      ctx.putImageData(imageData,0,0)
+    }
+    function locRelativeCanvas(e){
+      const { clientX,clientY } = e
+      const { top,left } = canvas.getBoundingClientRect()
+      isDown = true
+      return {
+        x:clientX - left,
+        y:clientY - top
+      }
+    }
+    canvas.addEventListener('mousedown',function(e) {
+      pos = locRelativeCanvas(e)
+    })
+    canvas.addEventListener('mousemove',function(e) {
+      if(!isDown)return 
+      // applySnapshot()
+      const { x,y } = locRelativeCanvas(e)
+      ctx.beginPath() // 一定要使用 beginPath 清除之前的 sub-paths ,否则都会归属为一组 sub-paths,一组 sub-paths 会被 ctx.stroke() 统一渲染
+      ctx.moveTo(pos.x,pos.y)
+      ctx.lineTo(x,y)
+      ctx.stroke()
+    })
+    canvas.addEventListener('mouseup',function(e) {
+      // 存储画板已绘制的画板内容
+      saveSnapshot()
+      isDown = false
+    })
+  </script>
+</body>
+</html>
