@@ -57,7 +57,7 @@ export default {
      this.updateMousedownPos(e)
      const { x,y } = this.downPos
      const { width,height} = store.state.canvasRect
-     console.log('x,y',x,y)
+    //  当鼠标落点后计算当前文字换行的距离。
      store.commit('setTextAvailaleWidth',width - x)
     if(!hasSet) {
       // 当鼠标重新点击其他位置时候保存当前画板的内容。

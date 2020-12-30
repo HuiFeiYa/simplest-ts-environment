@@ -11,11 +11,6 @@
     const canvas = document.getElementById('canvas')
     const ctx = canvas.getContext('2d')
     const R = 20
-    // ctx.font = '50px serif'
-    // const text = 'Hello world 张三里斯王五，Hello world 张三里斯王五'
-    // const len = ctx.measureText(text)
-    // ctx.fillText(text,50,90)
-    // console.log('text',len)
     function loadImg(path,width,height) {
       return new Promise(res=>{
         const img = new Image()
@@ -37,7 +32,6 @@
       ctx.drawImage(img,0,0)
     }
     draw()
-    console.log('2')
   </script>
 </body>
 </html>

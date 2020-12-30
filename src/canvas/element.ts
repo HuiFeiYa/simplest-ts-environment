@@ -126,13 +126,7 @@ function loadImgSize(path:string,width:number,height:number):Promise<HTMLImageEl
 }
 export async function autoWrapText(width:number,height:number,value:string,font="16px sans-serif"):Promise<HTMLImageElement>{
   const { fontColor } = store.state
-  console.log('fontColor',fontColor)
-  // color:'+fontColor+'
+ //  这里用的color不能使用 hex 如:#000,无效
   const path = 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><foreignObject width="'+ width +'" height="'+ height +'"><body xmlns="http://www.w3.org/1999/xhtml" style="margin:0;font:'+ font +';word-break: break-word;color:'+fontColor+'">'+value+'</body></foreignObject></svg>';
   return  await loadImgSize(path,width,height)
 }
-// async function draw() {
-//   const value = '期需求需要建立一个统一的规划师视图及导入鱼塘中的规划师-客户关联数据，相关功能点如下：1. 新增“规划师列表”，展示规划师关联信息，并支持展示规划师详情。2. 原有的公众号粉丝列表中，支持导入鱼塘分配关系'
-//   const img = await autoWrapText(100,100,value)
-//   ctx.drawImage(img,0,0)
-// }

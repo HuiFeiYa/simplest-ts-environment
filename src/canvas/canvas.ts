@@ -257,15 +257,8 @@ export class VirtualCanvas {
   async updateText() {
     const { x,y } = this.downPos
     const { fontSize,fontColor,keybord,textAvailaleWidth } = store.state
-    // const width = store.state.textAvailaleWidth
-    // `${fontSize}px serif`
-    console.log('keybord',keybord)
-    
-    const img = await autoWrapText(200,1000,keybord,`${fontSize}px serif`)
+    const img = await autoWrapText(textAvailaleWidth,1000,keybord,`${fontSize}px serif`)
     this.cloneCtx.drawImage(img,x,y)
-    // this.cloneCtx.font = `${fontSize}px serif`
-    // this.cloneCtx.fillStyle = fontColor;
-    // this.cloneCtx.fillText(store.state.keybord,x,y)
     this.update()
     this.saveSnapshot()
   }
