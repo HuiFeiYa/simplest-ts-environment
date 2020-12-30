@@ -69,6 +69,7 @@ module.exports = {
         extensions: [ '.ts', '.tsx', '.js' ]
     },
     devServer:{
+        host:'0.0.0.0',
         // 设计开发环境静态文件代理文件夹，设置后可以通过 localhost:8080/index.js 可以访问
         contentBase:path.resolve(__dirname, 'public'),
     },
