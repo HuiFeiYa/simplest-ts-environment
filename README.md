@@ -53,7 +53,17 @@
     第一次背景绘制解决了，但是后面绘制的新内容都看不见了，因为都层级都更低无法被遮挡了。
     该如何解决？
 
-### 创建一个 canvas 作为 canvas 数据的存储仓库
+### 解决方式一：多次设置 ctx.globalCompositeOperation
+
+1. 绘制图案
+2. 将 ctx.globalCompositeOperation 设置为 destination-over 也就是在已有内容后面绘制
+3. 将 ctx.globalCompositeOperation 设置为 source-over 也就是在已经内容的上绘制
+
+这里也可以在更改 ctx.globalCompositeOperation 将 canvas 当前的状态存储在栈中。再次重新绘制时候，将 canvas 的上下文重新设置为之前的状态。后续详细讲。
+
+#### 仍然存在问题，当我们需要重新修改背景颜色，该如何解决
+
+### 解决方式二：创建一个 canvas 作为 canvas 数据的存储仓库
 
 <img width="300"  src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8989732f2a534dad9bd852a38e62f860~tplv-k3u1fbpfcp-watermark.image" />
 1.  创建内容层
@@ -88,6 +98,18 @@
 将 image 绘制到 canvas 上。这里的 image 包括
 
     -   HTMLImageElement 、HTMLCanvasElement 、SVGImageElement 、HTMLVideoElement 等
+
+## 如何导出当前 canvas 的内容为图片？如何自定义下载图片的格式
+
+### 导出 url
+
+    -   canvas.toDataURL()
+
+    > HTMLCanvasElement.toDataURL() 方法返回一个包含图片展示的 data URI 。可以使用 type 参数其类型，默认为 PNG 格式。图片的分辨率为 96dpi。通过该方式得到的是 base64的地址。
+
+    * canvas.toBlob()
+
+    > HTMLCanvasElement.toBlob() 方法创造Blob对象，用以展示canvas上的图片；这个图片文件可以被缓存或保存到本地，由用户代理端自行决定。如不特别指明，图片的类型默认为 image/png，分辨率为96dpi。
 
 ## 绘制直线和连续的线，他们的绘制区别
 
