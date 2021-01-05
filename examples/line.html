@@ -41,9 +41,11 @@
       // applySnapshot()
       const { x,y } = locRelativeCanvas(e)
       ctx.beginPath() // 一定要使用 beginPath 清除之前的 sub-paths ,否则都会归属为一组 sub-paths,一组 sub-paths 会被 ctx.stroke() 统一渲染
+      ctx.lineWidth = 3
       ctx.moveTo(pos.x,pos.y)
       ctx.lineTo(x,y)
       ctx.stroke()
+      // pos = locRelativeCanvas(e)
     })
     canvas.addEventListener('mouseup',function(e) {
       // 存储画板已绘制的画板内容

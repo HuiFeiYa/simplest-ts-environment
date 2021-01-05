@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+<style>
+</style>
 <body>
   <canvas id="canvas" width="500" height="500"></canvas>
   <script>
@@ -13,6 +15,8 @@
     const R = 20
     ctx.fillStyle = '#f66'
     ctx.fillRect(0,0,canvas.width,canvas.height)
+    // ctx.rect(0,0,canvas.width,canvas.height)
+    // ctx.fill()
     canvas.onmousemove = function(e) {
       const { clientX,clientY } = e
       windowLocToCanvas(clientX,clientY)

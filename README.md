@@ -40,6 +40,8 @@
 
 ### 如何解决
 
+canvas 默认的内容混合方式是 ctx.globalCompositeOperation 为 source-over 也就是绘制的新内容在原有内容之上。
+
     设置 ctx.globalCompositeOperation 来改变新生成的绘制在当前画布内容后面
     ```
       ctx.globalCompositeOperation = 'destination-over'
@@ -140,7 +142,40 @@
 
 ## 导入图片操作
 
+### FileReader
+
+> FileReader 对象允许 Web 应用程序异步读取存储在用户计算机上的文件（或原始数据缓冲区）的内容，使用 File 或 Blob 对象指定要读取的文件或数据。
+> 其中 File 对象可以是来自用户在一个\<input>元素上选择文件后返回的 FileList 对象,也可以来自拖放操作生成的 DataTransfer 对象,还可以是来自在一个 HTMLCanvasElement 上执行 mozGetAsFile()方法后返回结果。
+
+#### 构造函数 FileReader
+
+FileReader()
+返回一个新构造的 FileReader。
+
+#### 属性
+
+    -   FileReader.readyState 只读
+
+    ```
+    表示FileReader状态的数字。取值如下：
+    常量名 值 描述
+    EMPTY 0 还没有加载任何数据.
+    LOADING 1 数据正在被加载.
+    DONE 2 已完成全部的读取请求.
+    ```
+    * FileReader.result 文件的内容。该属性仅在读取操作完成后才有效，数据的格式取决于使用哪个方法来启动读取操作。
+
+#### 事件处理
+
+    * FileReader.onload。处理 load 事件。该事件在读取操作完成时触发。
+
+#### 方法
+
+    * FileReader.readAsDataURL(),开始读取指定的Blob中的内容。一旦完成，result属性中将包含一个data: URL格式的Base64字符串以表示所读取文件的内容。
+
 ### 插入图片
+
+通过创建 FileReader 实例来读取 input 选择的文件,
 
 1. 点击 toolbar 时候判断点击图标为导入，触发 input 上传的文体，拿到图片地址
 

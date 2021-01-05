@@ -97,6 +97,11 @@ export function download(canvas:HTMLCanvasElement,width:number,height:number,ima
   saveFile(dataUrl,imageType,fileName)
 }
 
+/**
+ * 读取 input 元素选择的文件转化成 Base64 的地址，并根据该地址创建 img 元素
+ * @param blob File 对象
+ * @param width 指定图片的宽度
+ */
 export function blobToImg (blob:Blob,width:number) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader()
