@@ -66,7 +66,7 @@ ctx.globalCompositeOperation 内容混合方式
 
 canvas 本身没有自动换行。需要自己实现，利用 svg forginObject 元素实现。
 
-1. 监听键盘事件，确认输入的内容。将内容拼接成 `<svg xmlns="http://www.w3.org/2000/svg"><foreignObject><body></body></foreignObject></svg>` 格式。
+1. 监听键盘事件，确认输入的内容。将内容拼接成 `<svg xmlns="http://www.w3.org/2000/svg"><body><p style="width:100px"></p></body><foreignObject><body></body></foreignObject></svg>` 格式。
 
     - 我们可以给 foreiginObject 元素设置宽高
     - 可以给 body 内的元素设置 css 样式，这样我们添加的内容又可以通过 css 来控制了。
@@ -93,3 +93,9 @@ canvas 本身没有自动换行。需要自己实现，利用 svg forginObject �
         * 通过 download 属性设置下载图片的文件名
         * 通过 href 设置下载文件的地址
         * 模拟执行 click 事件，实现下载操作
+
+## 图片裁剪
+
+![](https://pic1.zhimg.com/80/v2-f5e7b335c5787599d3ab2979efdfb488_1440w.jpg)
+
+核心:使用 ctx.drawImage(image,dx,dy,sx,sy)。

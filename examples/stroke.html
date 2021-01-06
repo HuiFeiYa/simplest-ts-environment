@@ -13,6 +13,7 @@
     const ctx = canvas.getContext('2d')
     const button = document.getElementsByTagName('button')[0]
     ctx.beginPath()
+    // sub-paths
     ctx.lineWidth = 4
     ctx.strokeStyle = 'green'
     ctx.moveTo(100,100)
@@ -20,7 +21,7 @@
     ctx.stroke()
 
     button.addEventListener('click',function(){
-      // ctx.beginPath() 
+      ctx.beginPath() 
       ctx.moveTo(100,200)
       ctx.lineTo(200,200)
       ctx.lineWidth = 10
