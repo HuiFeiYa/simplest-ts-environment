@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <input type="file">
+  <script>
+    const canvas = document.getElementById('canvas')
+    const context = canvas.getContext('2d')
+    const file = document.getElementsByTagName('input')[0]
+    const reader = new FileReader()
+    let img = new Image()
+    
+    // base64地址图片加载完毕后
+    img.onload = function () {
+          // 图片原始尺寸
+          var originWidth = this.width;
+          var originHeight = this.height;
+          // 最大尺寸限制
+          var maxWidth = 400, maxHeight = 400;
+          // 目标尺寸
+          var targetWidth = originWidth, targetHeight = originHeight;
+          // 图片尺寸超过400x400的限制
+          if (originWidth > maxWidth || originHeight > maxHeight) {
+              if (originWidth / originHeight > maxWidth / maxHeight) {
+                  // 更宽，按照宽度限定尺寸
+                  targetWidth = maxWidth;
+                  targetHeight = Math.round(maxWidth * (originHeight / originWidth));
+              } else {
+                  targetHeight = maxHeight;
+                  targetWidth = Math.round(maxHeight * (originWidth / originHeight));
+              }
+          }
+              
+          // canvas对图片进行缩放
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          // 清除画布
+          context.clearRect(0, 0, targetWidth, targetHeight);
+          // 图片压缩
+          context.drawImage(img, 0, 0, targetWidth, targetHeight);
+          // canvas转为blob并上传
+          canvas.toBlob(function (blob) {
+              console.log('开始上传',blob)
+          }, file.type || 'image/png');
+      };
+
+    // 将读取的地址赋值给图片，获取目标 img 元素
+    reader.onload = function(e) {
+      const path = e.target.result
+      img.src = path
+    }
+    file.addEventListener('change',function(e){
+      // 读取文件内容
+      reader.readAsDataURL(e.target.files[0])
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <canvas width="500" height="500"></canvas>
+  <button>画一条 linewidth 为 10px 的线</button>
+  <script>
+    const canvas = document.getElementsByTagName('canvas')[0]
+    const ctx = canvas.getContext('2d')
+    const button = document.getElementsByTagName('button')[0]
+    ctx.beginPath()
+    // sub-paths
+    ctx.lineWidth = 4
+    ctx.strokeStyle = 'green'
+    ctx.moveTo(100,100)
+    ctx.lineTo(200,100)
+    ctx.stroke()
+
+    button.addEventListener('click',function(){
+      ctx.beginPath() 
+      ctx.moveTo(100,200)
+      ctx.lineTo(200,200)
+      ctx.lineWidth = 10
+      ctx.stroke()
+    })
+  </script>
+</body>
+</html>

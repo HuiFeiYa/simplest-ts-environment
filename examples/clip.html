@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+</style>
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas')
+    const ctx = canvas.getContext('2d')
+    const R = 20
+    ctx.fillStyle = '#f66'
+    ctx.fillRect(0,0,canvas.width,canvas.height)
+    // ctx.rect(0,0,canvas.width,canvas.height)
+    // ctx.fill()
+    canvas.onmousemove = function(e) {
+      const { clientX,clientY } = e
+      windowLocToCanvas(clientX,clientY)
+    }
+    function windowLocToCanvas(x,y) {
+      const { top,left } = canvas.getBoundingClientRect()
+      ctx.save()
+      ctx.beginPath()
+      ctx.arc(x-left,y-top,R,0,Math.PI*2,false)
+      ctx.clip()
+      ctx.clearRect(0,0,canvas.width,canvas.height)
+      ctx.restore()
+    }
+  </script>
+</body>
+</html>

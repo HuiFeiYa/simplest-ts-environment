@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .wrapper{
+    perspective: 400px;
+    perspective-origin:center;
+    width:400px;
+    height: 400px;
+    transform-origin: center;
+    transform-style:preserve-3d;
+    margin-top:200px;
+    margin-left: 100px;
+    position: relative;
+  }
+  .layer{
+    transform: rotateY(60deg) translateZ(30px);
+    background-color: rgba(0,128,0,0.3);
+    width: 100%;
+    height: 100%;
+  }
+  .layer1{
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    transform-origin: center;
+    transform: rotateY(60deg) translateZ(125px);
+    background-color: #000;
+    border: 2px solid #000;
+    color: #fff;
+  }
+  .layer2{
+    position: absolute;
+    top: 200px;
+    left: 0;
+    width: 100%;
+    transform-origin: center;
+    transform: rotateY(60deg) translateZ(125px);
+    background-color: red;
+    color: #fff;
+  }
+  .bg1,.bg2{
+    position: absolute;
+    top:0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background-color: rgba(115, 128, 0, 0.3);
+   
+  }
+  .bg1{
+    transform: rotateY(40deg) translateZ(320px);
+    width: 51%;
+    height: 53%;
+    top:102px;
+  }
+  .bg2{
+    transform: rotateY(60deg) translateZ(-40px);
+    width: 100%;
+    height: 100%;
+  }
+  .background{
+    width:100%;
+    height: 100%;
+    background-color: rgba(0,128,0,0.3);
+    transform: rotateY(60deg) translateZ(30px);
+  }
+  .content{
+    position: absolute;
+    top:30px;
+    left:0;
+    width:100%;
+    height: 60%;
+    background-color: rgba(128, 83, 0, 0.3);
+    transform: rotateY(60deg) translateZ(130px);
+  }
+</style>
+<body>
+  <canvas id="canvas" width="400" height="400"></canvas>
+  <h2>通过设置 ctx.globalCompositeOperation 方式更改绘制背景的方式</h2>
+  <div class="wrapper">
+    <div class="layer">
+    </div>
+    <div class="layer1">线条1</div>
+    <div class="layer2">线条2</div>
+    <div class="bg1">新更换的背景1，会遮盖其他的内容</div>
+    <div class="bg2">新更换的背景2,会被遮盖</div>
+  </div>
+  <h2 style="margin-top:200px">通过两个 canvas 分别表示背景层和内容层</h2>
+  <div class="method2">
+    先在内容层上绘制内容，然后使用 ctx.drawImage(canvas,dx,dy,sw,sy) 将内容层绘制到背景层上。每次绘制背景层时候，可以将canvas上的内容都清除掉，因为他的作用仅仅是绘制背景。内容不需要保留。
+    <div class="wrapper">
+      <div class="background">背景层专门负责绘制背景</div>
+      <div class="content">内容层专门负责绘制内容</div>
+    </div>
+  </div>
+  <script>
+    const canvas = document.getElementById('canvas')
+    const ctx = canvas.getContext('2d')
+    // 绘制直线
+    ctx.lineWidth = 10
+    ctx.strokeStyle = '#000'
+    ctx.moveTo(100,100)
+    ctx.lineTo(200,100)
+    ctx.stroke()
+    ctx.save()
+    // 填充背景颜色为绿色
+    ctx.globalCompositeOperation = 'destination-over'
+    ctx.fillStyle = 'green'
+    ctx.rect(0,0,canvas.width,canvas.height)
+    ctx.fill()
+    // 将 globalCompositeOperation 方式重新设置为 source-over 继续绘制图案
+    ctx.beginPath()
+    ctx.globalCompositeOperation = 'source-over' // 这里也可以用 ctx.restore()
+    ctx.strokeStyle = 'red'
+    ctx.moveTo(100,200)
+    ctx.lineTo(200,200)
+    ctx.stroke()
+  </script>
+</body>
+</html>
